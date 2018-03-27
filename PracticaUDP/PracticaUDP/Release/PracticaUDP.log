@@ -1,0 +1,5 @@
+﻿  main.cpp
+main.cpp(67): warning C4244: 'argument': conversion from 'float' to 'sf::Int32', possible loss of data
+main.cpp(170): warning C4244: 'argument': conversion from '::size_t' to 'float', possible loss of data
+main.cpp(41): warning C4101: 'data': unreferenced local variable
+sfml-graphics.lib(sfml-graphics-2.dll) : fatal error LNK1112: module machine type 'x64' conflicts with target machine type 'x86'
