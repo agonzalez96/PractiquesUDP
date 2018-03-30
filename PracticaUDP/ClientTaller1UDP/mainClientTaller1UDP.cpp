@@ -11,7 +11,15 @@
 using namespace sf;
 using namespace std;
 
-void receiveData(UdpSocket* socket) {
+struct Player {
+	int posX = -1;
+	int posY = -1;
+	int ID = 0;
+	IpAddress senderIP;
+	unsigned short senderPort;
+};
+
+void receiveData(UdpSocket* socket, Player* player) {
 	IpAddress senderIP;
 	unsigned short senderPort;
 	Packet ack;;
@@ -30,8 +38,10 @@ void receiveData(UdpSocket* socket) {
 		else if (status_r == Socket::Done)
 		{
 			//FUNCIONA
-			ack >> mess;
-			cout << mess << endl;
+			//ack >> mess;
+			//cout << mess << endl;
+			ack >> player->ID;
+			cout << "ID: " << player->ID << endl;
 			//aMensajes->push_back(buffer);
 		}
 	}
@@ -41,6 +51,7 @@ int main()
 {
 	UdpSocket socket;
 	Packet conn;
+	Player* player = new Player;
 	conn << "Holi";
 	Socket::Status status = socket.send(conn, "localhost", 50000);
 	if (status != Socket::Done) {
@@ -50,7 +61,7 @@ int main()
 
 	}
 
-	thread t1(&receiveData, &socket);
+	thread t1(&receiveData, &socket, player);
 	while (true) {
 
 	}
