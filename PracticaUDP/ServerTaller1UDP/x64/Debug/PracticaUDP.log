@@ -1,0 +1,5 @@
+﻿  main.cpp
+c:\users\alumno\source\repos\practicaudp\practicaudp\main.cpp(67): warning C4244: 'argument': conversion from 'float' to 'sf::Int32', possible loss of data
+c:\users\alumno\source\repos\practicaudp\practicaudp\main.cpp(170): warning C4244: 'argument': conversion from '::size_t' to 'float', possible loss of data
+c:\users\alumno\source\repos\practicaudp\practicaudp\main.cpp(41): warning C4101: 'data': unreferenced local variable
+  PracticaUDP.vcxproj -> C:\Users\Alumno\source\repos\PracticaUDP\x64\Debug\PracticaUDP.exe

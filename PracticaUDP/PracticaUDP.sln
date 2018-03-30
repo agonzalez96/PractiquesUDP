@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PracticaUDP", "PracticaUDP\PracticaUDP.vcxproj", "{8F0B1936-E7BA-48E8-907A-896C564DEB4B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientTaller1UDP", "ClientTaller1UDP\ClientTaller1UDP.vcxproj", "{8F0B1936-E7BA-48E8-907A-896C564DEB4B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerTaller1UDP", "ServerTaller1UDP\ServerTaller1UDP.vcxproj", "{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{8F0B1936-E7BA-48E8-907A-896C564DEB4B}.Release|x64.Build.0 = Release|x64
 		{8F0B1936-E7BA-48E8-907A-896C564DEB4B}.Release|x86.ActiveCfg = Release|Win32
 		{8F0B1936-E7BA-48E8-907A-896C564DEB4B}.Release|x86.Build.0 = Release|Win32
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Debug|x64.ActiveCfg = Debug|x64
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Debug|x64.Build.0 = Debug|x64
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Debug|x86.ActiveCfg = Debug|Win32
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Debug|x86.Build.0 = Debug|Win32
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Release|x64.ActiveCfg = Release|x64
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Release|x64.Build.0 = Release|x64
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Release|x86.ActiveCfg = Release|Win32
+		{74CB47D7-F6EB-4E0A-A1D6-7947F0C5DF77}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

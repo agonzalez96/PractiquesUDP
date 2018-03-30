@@ -1,0 +1,14 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (PracticaUDP.vcxproj, Taller1UDP.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  mainClientTaller1UDP.cpp
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: __thiscall sf::IpAddress::IpAddress(char const *)" (__imp_??0IpAddress@sf@@QAE@PBD@Z) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: __thiscall sf::Packet::Packet(void)" (__imp_??0Packet@sf@@QAE@XZ) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: virtual __thiscall sf::Packet::~Packet(void)" (__imp_??1Packet@sf@@UAE@XZ) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: class sf::Packet & __thiscall sf::Packet::operator<<(char const *)" (__imp_??6Packet@sf@@QAEAAV01@PBD@Z) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: __thiscall sf::UdpSocket::UdpSocket(void)" (__imp_??0UdpSocket@sf@@QAE@XZ) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: enum sf::Socket::Status __thiscall sf::UdpSocket::send(class sf::Packet &,class sf::IpAddress const &,unsigned short)" (__imp_?send@UdpSocket@sf@@QAE?AW4Status@Socket@2@AAVPacket@2@ABVIpAddress@2@G@Z) referenced in function _main
+mainClientTaller1UDP.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) public: virtual __thiscall sf::UdpSocket::~UdpSocket(void)" (__imp_??1UdpSocket@sf@@UAE@XZ) referenced in function _main
+C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\\deps64\lib\sfml-graphics-d.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\\deps64\lib\sfml-window-d.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\\deps64\lib\sfml-system-d.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\\deps64\lib\sfml-network-d.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\Debug\ClientTaller1UDP.exe : fatal error LNK1120: 7 unresolved externals
