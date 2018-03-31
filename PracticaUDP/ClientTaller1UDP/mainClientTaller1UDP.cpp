@@ -52,7 +52,7 @@ void receiveData(UdpSocket* socket, Player* player, vector<Player*>* aPlayers) {
 				ack >> player->ID;
 				ack >> player->posX;
 				ack >> player->posY;
-				
+				aPlayers->push_back(player);
 				cout << "ID: " << player->ID << endl;
 				cout << "posX: " << player->posX << endl;
 				cout << "posY: " << player->posY << endl;
@@ -80,14 +80,14 @@ int main()
 
 	thread t1(&receiveData, &socket, player, &aPlayers);
 	while (true) {
-		/*cin >> print;
+		cin >> print;
 		if (print == 'p') {
 			for (int i = 0; i < aPlayers.size(); i++) {
 				cout << "ID: " << aPlayers[i]->ID << endl;
 				cout << "Pos x: " << aPlayers[i]->posX << endl;
 				cout << "Pos y: " << aPlayers[i]->posY << endl;
 			}
-		}*/
+		}
 
 	}
 	return 0;

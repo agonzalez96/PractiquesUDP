@@ -21,6 +21,9 @@ struct Player {
 
 int main()
 {
+
+	srand(time(NULL));
+
 	UdpSocket socket;
 
 	Packet conn;
@@ -44,6 +47,8 @@ int main()
 			conn >> mes;
 			tempID++;
 			player->ID = tempID;
+			player->posX = rand() % 10;
+			player->posY = rand() % 10;
 			ack << player->ID;
 			socket.send(ack, player->senderIP, player->senderPort);
 		}
@@ -57,6 +62,7 @@ int main()
 				type = 1;
 				newInfo << type;
 				newInfo << aPlayers[j]->ID;
+	
 				newInfo << aPlayers[j]->posX;
 				newInfo << aPlayers[j]->posY;
 				socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
