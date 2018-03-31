@@ -24,14 +24,17 @@ int main()
 	UdpSocket socket;
 
 	Packet conn;
-	//ack << "Connected";
 	string mes;
 	vector<Player*> aPlayers;
 	int tempID = 0;
+	int type = 0;
 
 	Socket::Status status = socket.bind(50000);
 	while (true) {
 		Packet ack;
+		type = 0;
+		ack << type;
+		ack << "Welcome";
 		Player* player = new Player;
 		if (status != Socket::Done) {
 			cout << "nope";
@@ -48,6 +51,17 @@ int main()
 		cout << "Port: " << player->senderPort << endl;
 		cout << "mensaje: " << mes << endl;
 		aPlayers.push_back(player);
+		for (int i = 0; i < aPlayers.size(); i++) {
+			for (int j = 0; j < aPlayers.size(); j++) {
+				Packet newInfo;
+				type = 1;
+				newInfo << type;
+				newInfo << aPlayers[j]->ID;
+				newInfo << aPlayers[j]->posX;
+				newInfo << aPlayers[j]->posY;
+				socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+			}		
+		}
 	}
 	
 	system("pause");

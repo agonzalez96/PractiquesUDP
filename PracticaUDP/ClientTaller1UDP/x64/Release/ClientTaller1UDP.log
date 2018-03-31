@@ -1,8 +1,9 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (PracticaUDP.vcxproj, Taller1UDP.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   mainClientTaller1UDP.cpp
+mainClientTaller1UDP.cpp(69): warning C4101: 'print': unreferenced local variable
   Generating code
-  6 of 111 functions ( 5.4%) were compiled, the rest were copied from previous compilation.
+  4 of 182 functions ( 2.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    9 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ClientTaller1UDP.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\x64\Release\ClientTaller1UDP.exe
