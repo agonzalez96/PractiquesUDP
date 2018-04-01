@@ -2,11 +2,13 @@
   mainClientTaller1UDP.cpp
 mainClientTaller1UDP.cpp(23): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 mainClientTaller1UDP.cpp(24): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-mainClientTaller1UDP.cpp(142): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-mainClientTaller1UDP.cpp(161): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller1UDP.cpp(144): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller1UDP.cpp(155): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller1UDP.cpp(164): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller1UDP.cpp(89): warning C4101: 'print': unreferenced local variable
   Generating code
-  3 of 194 functions ( 1.5%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  43 of 183 functions (23.5%) were compiled, the rest were copied from previous compilation.
+    42 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  ClientTaller1UDP.vcxproj -> C:\Users\Alex Calvo\Documents\PractiquesUDP\PracticaUDP\x64\Release\ClientTaller1UDP.exe
+  ClientTaller1UDP.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PracticaUDP\x64\Release\ClientTaller1UDP.exe

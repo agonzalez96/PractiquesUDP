@@ -39,15 +39,17 @@ struct Player {
 	unsigned short senderPort;
 };
 
-void receiveData(UdpSocket* socket, Player* player, vector<Player*>* aPlayers) {
+void receiveData(UdpSocket* socket,  vector<Player*>* aPlayers) {
 	IpAddress senderIP;
 	unsigned short senderPort;
 	Packet ack;;
 	string mess;
 	int type;
 	int count = 0;
+	Player* player = new Player;
 
 	while (true) {
+		player = new Player;
 		sf::Socket::Status status_r = socket->receive(ack, senderIP, senderPort);
 
 		if (status_r != sf::Socket::Done)
@@ -98,16 +100,16 @@ int main()
 
 	}
 
-	thread t1(&receiveData, &socket, player, &aPlayers);
+	thread t1(&receiveData, &socket, &aPlayers);
 	while (true) {
-		cin >> print;
+		/*cin >> print;
 		if (print == 'p') {
 			for (int i = 0; i < aPlayers.size(); i++) {
 				cout << "ID: " << aPlayers[i]->ID << endl;
 				cout << "Pos x: " << aPlayers[i]->posX << endl;
 				cout << "Pos y: " << aPlayers[i]->posY << endl;
 			}
-		}
+		}*/
 		sf::Vector2f casillaOrigen, casillaDestino;
 
 		sf::RenderWindow window(sf::VideoMode(640, 640), "UDP");
@@ -144,25 +146,74 @@ int main()
 				}
 			}
 
-			Color red(0, 255, 255, 255);
-			Color blue(255, 0, 255, 255);
+			Color red(255, 0, 0, 255);
+			Color blue(0, 0, 255, 255);
 
 			//Player1
 			CircleShape Player1(RADIO_AVATAR);
 			Player1.setFillColor(red);
-			Vector2f posicionPlayer1(8.f, 8.f);
+			Vector2f posicionPlayer1(aPlayers[0]->posX, aPlayers[0]->posY);
 			posicionPlayer1 = BoardToWindows(posicionPlayer1);
 			Player1.setPosition(posicionPlayer1);
 			window.draw(Player1);
-			//Player2
-			for (int i = 1; i < aPlayers.size(); i++) {
-				CircleShape Player2 (RADIO_AVATAR);
+
+			if (aPlayers.size() > 1) {
+				//Player2
+				CircleShape Player2(RADIO_AVATAR);
 				Player2.setFillColor(blue);
-				Vector2f posicionPlayer2(aPlayers[i]->posX, aPlayers[i]->posX);
+				Vector2f posicionPlayer2(aPlayers[aPlayers.size() - 1]->posX, aPlayers[aPlayers.size() - 1]->posY);
 				posicionPlayer2 = BoardToWindows(posicionPlayer2);
 				Player2.setPosition(posicionPlayer2);
 				window.draw(Player2);
 			}
+			
+			
+			////Player2
+			//for (int i = 1; i < aPlayers.size(); i++) {
+			//	CircleShape Player2 (RADIO_AVATAR);
+			//	Player2.setFillColor(blue);
+			//	Vector2f posicionPlayer2(aPlayers[i]->posX, aPlayers[i]->posX);
+			//	posicionPlayer2 = BoardToWindows(posicionPlayer2);
+			//	Player2.setPosition(posicionPlayer2);
+			//	window.draw(Player2);
+			//}
+
+			////Player1
+			//CircleShape Player1(RADIO_AVATAR);
+			//Player1.setFillColor(red);
+			//Vector2f posicionPlayer1(aPlayers[0]->posX, aPlayers[0]->posY);
+			//posicionPlayer1 = BoardToWindows(posicionPlayer1);
+			//Player1.setPosition(posicionPlayer1);
+			//window.draw(Player1);
+
+			//if (aPlayers.size() > 1) {
+			//	//Player2
+			//	CircleShape Player2(RADIO_AVATAR);
+			//	Player2.setFillColor(blue);
+			//	Vector2f posicionPlayer2(aPlayers[aPlayers.size() - 1]->posX, aPlayers[aPlayers.size() - 1]->posY);
+			//	posicionPlayer2 = BoardToWindows(posicionPlayer1);
+			//	Player2.setPosition(posicionPlayer1);
+			//	window.draw(Player2);
+			//}
+
+
+			//Player prova
+			/*	for (int i = 1; i < aPlayers.size(); i++) {
+			CircleShape* playerCircle = new CircleShape;
+			playerCircle->setRadius(RADIO_AVATAR);
+			playerCircle->setFillColor(red);
+			if (aPlayers[i]->ID == 2) {
+			playerCircle->setFillColor(blue);
+			}
+			Vector2f playerPosition(aPlayers[i]->posX, aPlayers[i]->posY);
+			playerPosition = BoardToWindows(playerPosition);
+			playerCircle->setPosition(playerPosition);
+			window.draw(*playerCircle);
+
+
+			}*/
+
+
 			window.display();
 		}
 	}
