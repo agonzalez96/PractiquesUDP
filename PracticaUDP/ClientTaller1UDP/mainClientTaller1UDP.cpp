@@ -42,10 +42,11 @@ struct Player {
 void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) {
 	IpAddress senderIP;
 	unsigned short senderPort;
-	Packet ack;;
+	Packet ack;
 	string mess;
 	int type;
 	int count = 0;
+	int discID;
 	Player* player = new Player;
 
 	while (true) {
@@ -83,9 +84,21 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 					cout << "posX: " << player->posX << endl;
 					cout << "posY: " << player->posY << endl;
 				}
-				
 			}
-			//aMensajes->push_back(buffer);
+			else if (type == 2) {
+				aPlayers->resize(0);
+				count - 1;
+				for (int i = 0; i < count; i++) {
+					player = new Player;
+					ack >> player->ID;
+					ack >> player->posX;
+					ack >> player->posY;
+					aPlayers->push_back(player);
+					cout << "ID: " << player->ID << endl;
+					cout << "posX: " << player->posX << endl;
+					cout << "posY: " << player->posY << endl;
+				}
+			}
 		}
 	}
 }
@@ -94,10 +107,14 @@ int main()
 {
 	char print;
 	UdpSocket socket;
-	Packet conn;
+	Packet conn, disc;
 	Player* player = new Player;
 	vector<Player*> aPlayers;
+	int type = 0;
+	conn << type;
 	conn << "Holi";
+
+
 	Socket::Status status = socket.send(conn, "localhost", 50000);
 	if (status != Socket::Done) {
 
@@ -122,6 +139,9 @@ int main()
 			{
 			case sf::Event::Closed:
 				window.close();
+				disc << 1;
+				disc << player->ID;
+				status = socket.send(disc, "localhost", 50000);
 				break;
 			default:
 				break;
@@ -143,10 +163,6 @@ int main()
 				window.draw(rectBlanco);
 			}
 		}
-
-		Color red(255, 0, 0, 255);
-		Color blue(0, 0, 255, 255);
-
 
 		//Draw Players
 		CircleShape plCircle(RADIO_AVATAR);

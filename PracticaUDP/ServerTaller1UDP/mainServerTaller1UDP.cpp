@@ -30,13 +30,15 @@ int main()
 	string mes;
 	vector<Player*> aPlayers;
 	int tempID = 0;
-	int type = 0;
+	int sendType = 0;
+	int recType = 0;
+	int discID;
 
 	Socket::Status status = socket.bind(50000);
 	while (true) {
 		Packet ack;
-		type = 0;
-		ack << type;
+		sendType = 0;
+		ack << sendType;
 		ack << "Welcome";
 		Player* player = new Player;
 		if (status != Socket::Done) {
@@ -44,35 +46,58 @@ int main()
 		}
 		else {
 			socket.receive(conn, player->senderIP, player->senderPort);
-			conn >> mes;
-			tempID++;
-			player->ID = tempID;
-			player->posX = rand() % 10;
-			player->posY = rand() % 10;
-			ack << player->ID;
-			ack << player->posX;
-			ack << player->posY;
-			socket.send(ack, player->senderIP, player->senderPort);
-		}
-		cout << "IP: " << player->senderIP << endl;
-		cout << "Port: " << player->senderPort << endl;
-		cout << "mensaje: " << mes << endl;
+			conn >> recType;
+			if (recType == 0) {
+				conn >> mes;
+				tempID++;
+				player->ID = tempID;
+				player->posX = rand() % 10;
+				player->posY = rand() % 10;
+				ack << player->ID;
+				ack << player->posX;
+				ack << player->posY;
+				socket.send(ack, player->senderIP, player->senderPort);
+				aPlayers.push_back(player);
+				
+				cout << "IP: " << player->senderIP << endl;
+				cout << "Port: " << player->senderPort << endl;
+				cout << "mensaje: " << mes << endl;
 
+				Packet newInfo;
+				sendType = 1;
+				newInfo << sendType;
+				newInfo << player->ID;  //Per saber quanta gent hi ha
+				for (int j = 0; j < aPlayers.size(); j++) {
+					newInfo << aPlayers[j]->ID;
+					newInfo << aPlayers[j]->posX;
+					newInfo << aPlayers[j]->posY;
+				}
+				for (int i = 0; i < aPlayers.size(); i++) {
+					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+				}
+			}
+			else if (recType == 1) {
+				conn >> discID;
+				for (int i = 0; i < aPlayers.size(); i++) {
+					if (discID == aPlayers[i]->ID) {
+						aPlayers.erase(aPlayers.begin() + i);
+					}
+				}
+				Packet newInfo;
+				sendType = 2;
+				newInfo << sendType;
+				for (int j = 0; j < aPlayers.size(); j++) {
+					newInfo << aPlayers[j]->ID;
+					newInfo << aPlayers[j]->posX;
+					newInfo << aPlayers[j]->posY;
+				}
+				for (int i = 0; i < aPlayers.size(); i++) {
+					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+				}
+			}
 
-		aPlayers.push_back(player);
+		}
 
-		Packet newInfo;
-		type = 1;
-		newInfo << type;
-		newInfo << player->ID;  //Per saber quanta gent hi ha
-		for (int j = 0; j < aPlayers.size(); j++) {
-			newInfo << aPlayers[j]->ID;
-			newInfo << aPlayers[j]->posX;
-			newInfo << aPlayers[j]->posY;
-		}
-		for (int i = 0; i < aPlayers.size(); i++) {
-			socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-		}
 	}
 	
 	system("pause");
