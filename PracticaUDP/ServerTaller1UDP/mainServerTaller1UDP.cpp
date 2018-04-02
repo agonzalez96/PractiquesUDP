@@ -50,23 +50,28 @@ int main()
 			player->posX = rand() % 10;
 			player->posY = rand() % 10;
 			ack << player->ID;
+			ack << player->posX;
+			ack << player->posY;
 			socket.send(ack, player->senderIP, player->senderPort);
 		}
 		cout << "IP: " << player->senderIP << endl;
 		cout << "Port: " << player->senderPort << endl;
 		cout << "mensaje: " << mes << endl;
+
+
 		aPlayers.push_back(player);
+
+		Packet newInfo;
+		type = 1;
+		newInfo << type;
+		newInfo << player->ID;  //Per saber quanta gent hi ha
+		for (int j = 0; j < aPlayers.size(); j++) {
+			newInfo << aPlayers[j]->ID;
+			newInfo << aPlayers[j]->posX;
+			newInfo << aPlayers[j]->posY;
+		}
 		for (int i = 0; i < aPlayers.size(); i++) {
-			for (int j = 0; j < aPlayers.size(); j++) {
-				Packet newInfo;
-				type = 1;
-				newInfo << type;
-				newInfo << aPlayers[j]->ID;
-	
-				newInfo << aPlayers[j]->posX;
-				newInfo << aPlayers[j]->posY;
-				socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-			}		
+			socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 		}
 	}
 	

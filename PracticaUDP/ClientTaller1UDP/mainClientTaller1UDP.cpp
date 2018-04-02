@@ -39,7 +39,7 @@ struct Player {
 	unsigned short senderPort;
 };
 
-void receiveData(UdpSocket* socket,  vector<Player*>* aPlayers) {
+void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) {
 	IpAddress senderIP;
 	unsigned short senderPort;
 	Packet ack;;
@@ -49,7 +49,6 @@ void receiveData(UdpSocket* socket,  vector<Player*>* aPlayers) {
 	Player* player = new Player;
 
 	while (true) {
-		player = new Player;
 		sf::Socket::Status status_r = socket->receive(ack, senderIP, senderPort);
 
 		if (status_r != sf::Socket::Done)
@@ -66,18 +65,25 @@ void receiveData(UdpSocket* socket,  vector<Player*>* aPlayers) {
 			if (type == 0) {
 				ack >> mess;
 				cout << mess << endl;
-				ack >> player->ID;
+				ack >> player1->ID;
+				ack >> player1->posX;
+				ack >> player1->posY;
 				cout << "ID: " << player->ID << endl;
 			}
 			else if (type == 1) {
-				//aPlayers->resize(0);
-				ack >> player->ID;
-				ack >> player->posX;
-				ack >> player->posY;
-				aPlayers->push_back(player);
-				cout << "ID: " << player->ID << endl;
-				cout << "posX: " << player->posX << endl;
-				cout << "posY: " << player->posY << endl;
+				aPlayers->resize(0);
+				ack >> count;
+				for (int i = 0; i < count; i++) {
+					player = new Player;
+					ack >> player->ID;
+					ack >> player->posX;
+					ack >> player->posY;
+					aPlayers->push_back(player);
+					cout << "ID: " << player->ID << endl;
+					cout << "posX: " << player->posX << endl;
+					cout << "posY: " << player->posY << endl;
+				}
+				
 			}
 			//aMensajes->push_back(buffer);
 		}
@@ -100,122 +106,60 @@ int main()
 
 	}
 
-	thread t1(&receiveData, &socket, &aPlayers);
-	while (true) {
-		/*cin >> print;
-		if (print == 'p') {
-			for (int i = 0; i < aPlayers.size(); i++) {
-				cout << "ID: " << aPlayers[i]->ID << endl;
-				cout << "Pos x: " << aPlayers[i]->posX << endl;
-				cout << "Pos y: " << aPlayers[i]->posY << endl;
-			}
-		}*/
-		sf::Vector2f casillaOrigen, casillaDestino;
+	thread t1(&receiveData, &socket, &aPlayers, player);
+	
+	sf::Vector2f casillaOrigen, casillaDestino;
 
-		sf::RenderWindow window(sf::VideoMode(640, 640), "UDP");
+	sf::RenderWindow window(sf::VideoMode(640, 640), "UDP");
 
-		while (window.isOpen())
+	while (window.isOpen())
+	{
+		sf::Event event;
+
+		while (window.pollEvent(event))
 		{
-			sf::Event event;
-
-			while (window.pollEvent(event))
+			switch (event.type)
 			{
-				switch (event.type)
-				{
-				case sf::Event::Closed:
-					window.close();
-					break;
-				default:
-					break;
+			case sf::Event::Closed:
+				window.close();
+				break;
+			default:
+				break;
 
-				}
 			}
-
-			window.clear();
-
-			for (int i = 0; i<10; i++)
-			{
-				for (int j = 0; j<10; j++)
-				{
-					sf::RectangleShape rectBlanco(sf::Vector2f(LADO_CASILLA, LADO_CASILLA));
-					rectBlanco.setFillColor(sf::Color::Black);
-					rectBlanco.setOutlineThickness(3);
-					rectBlanco.setOutlineColor(sf::Color::White);
-					rectBlanco.setPosition(sf::Vector2f(i*LADO_CASILLA, j*LADO_CASILLA));
-					window.draw(rectBlanco);
-				}
-			}
-
-			Color red(255, 0, 0, 255);
-			Color blue(0, 0, 255, 255);
-
-			//Player1
-			CircleShape Player1(RADIO_AVATAR);
-			Player1.setFillColor(red);
-			Vector2f posicionPlayer1(aPlayers[0]->posX, aPlayers[0]->posY);
-			posicionPlayer1 = BoardToWindows(posicionPlayer1);
-			Player1.setPosition(posicionPlayer1);
-			window.draw(Player1);
-
-			if (aPlayers.size() > 1) {
-				//Player2
-				CircleShape Player2(RADIO_AVATAR);
-				Player2.setFillColor(blue);
-				Vector2f posicionPlayer2(aPlayers[aPlayers.size() - 1]->posX, aPlayers[aPlayers.size() - 1]->posY);
-				posicionPlayer2 = BoardToWindows(posicionPlayer2);
-				Player2.setPosition(posicionPlayer2);
-				window.draw(Player2);
-			}
-			
-			
-			////Player2
-			//for (int i = 1; i < aPlayers.size(); i++) {
-			//	CircleShape Player2 (RADIO_AVATAR);
-			//	Player2.setFillColor(blue);
-			//	Vector2f posicionPlayer2(aPlayers[i]->posX, aPlayers[i]->posX);
-			//	posicionPlayer2 = BoardToWindows(posicionPlayer2);
-			//	Player2.setPosition(posicionPlayer2);
-			//	window.draw(Player2);
-			//}
-
-			////Player1
-			//CircleShape Player1(RADIO_AVATAR);
-			//Player1.setFillColor(red);
-			//Vector2f posicionPlayer1(aPlayers[0]->posX, aPlayers[0]->posY);
-			//posicionPlayer1 = BoardToWindows(posicionPlayer1);
-			//Player1.setPosition(posicionPlayer1);
-			//window.draw(Player1);
-
-			//if (aPlayers.size() > 1) {
-			//	//Player2
-			//	CircleShape Player2(RADIO_AVATAR);
-			//	Player2.setFillColor(blue);
-			//	Vector2f posicionPlayer2(aPlayers[aPlayers.size() - 1]->posX, aPlayers[aPlayers.size() - 1]->posY);
-			//	posicionPlayer2 = BoardToWindows(posicionPlayer1);
-			//	Player2.setPosition(posicionPlayer1);
-			//	window.draw(Player2);
-			//}
-
-
-			//Player prova
-			/*	for (int i = 1; i < aPlayers.size(); i++) {
-			CircleShape* playerCircle = new CircleShape;
-			playerCircle->setRadius(RADIO_AVATAR);
-			playerCircle->setFillColor(red);
-			if (aPlayers[i]->ID == 2) {
-			playerCircle->setFillColor(blue);
-			}
-			Vector2f playerPosition(aPlayers[i]->posX, aPlayers[i]->posY);
-			playerPosition = BoardToWindows(playerPosition);
-			playerCircle->setPosition(playerPosition);
-			window.draw(*playerCircle);
-
-
-			}*/
-
-
-			window.display();
 		}
+
+		window.clear();
+
+		for (int i = 0; i<10; i++)
+		{
+			for (int j = 0; j<10; j++)
+			{
+				sf::RectangleShape rectBlanco(sf::Vector2f(LADO_CASILLA, LADO_CASILLA));
+				rectBlanco.setFillColor(sf::Color::Black);
+				rectBlanco.setOutlineThickness(3);
+				rectBlanco.setOutlineColor(sf::Color::White);
+				rectBlanco.setPosition(sf::Vector2f(i*LADO_CASILLA, j*LADO_CASILLA));
+				window.draw(rectBlanco);
+			}
+		}
+
+		Color red(255, 0, 0, 255);
+		Color blue(0, 0, 255, 255);
+
+
+		//Draw Players
+		CircleShape plCircle(RADIO_AVATAR);
+
+		for (int i = 0; i < aPlayers.size(); ++i) {
+			plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
+			if (aPlayers[i]->ID == player->ID) plCircle.setFillColor(sf::Color(255, 0, 0, 255));
+			else plCircle.setFillColor(sf::Color(0, 0, 255, 255));
+			window.draw(plCircle);
+		}
+
+		window.display();
 	}
+	t1.join();
 	return 0;
 }
