@@ -1,2 +1,14 @@
-﻿  GameClient.vcxproj -> C:\Users\acalvo\Desktop\Platilla_3Projects\x64\Release\GameClient.exe
-  GameClient.vcxproj -> C:\Users\acalvo\Desktop\Platilla_3Projects\x64\Release\GameClient.pdb (Full PDB)
+﻿  mainClientTaller6.cpp
+mainClientTaller6.cpp(24): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(25): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(83): warning C4552: '-': operator has no effect; expected operator with side-effect
+mainClientTaller6.cpp(42): warning C4101: 'discID': unreferenced local variable
+mainClientTaller6.cpp(240): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(249): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(115): warning C4101: 'print': unreferenced local variable
+  Generating code
+  228 of 228 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    32 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  GameClient.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Release\GameClient.exe

@@ -5,6 +5,7 @@
 #include <vector>
 #include <thread>
 #include <cstring>
+#include <PlayerInfo.h>
 
 #define MAX_MENSAJES 30
 
@@ -30,14 +31,6 @@ Vector2f BoardToWindows(Vector2f _position)
 {
 	return Vector2f(_position.x*LADO_CASILLA + OFFSET_AVATAR, _position.y*LADO_CASILLA + OFFSET_AVATAR);
 }
-
-struct Player {
-	int posX = -1;
-	int posY = -1;
-	int ID = 0;
-	IpAddress senderIP;
-	unsigned short senderPort;
-};
 
 void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) {
 	IpAddress senderIP;
@@ -99,6 +92,20 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 					cout << "posY: " << player->posY << endl;
 				}
 			}
+			else if (type == 3) {
+				aPlayers->resize(0);
+				for (int i = 0; i < count; i++) {
+					player = new Player;
+					ack >> player->ID;
+					ack >> player->posX;
+					ack >> player->posY;
+					aPlayers->push_back(player);
+					cout << "ID: " << player->ID << endl;
+					cout << "posX: " << player->posX << endl;
+					cout << "posY: " << player->posY << endl;
+					//  Accedir punter vector if(aPlayers->at(i).)
+				}
+			}
 		}
 	}
 }
@@ -139,10 +146,81 @@ int main()
 			{
 			case sf::Event::Closed:
 				window.close();
-				disc << 1;
+				type = 1;
+				disc << type;
 				disc << player->ID;
 				status = socket.send(disc, "localhost", 50000);
 				break;
+
+			case sf::Event::KeyPressed:
+				if (Keyboard::isKeyPressed(Keyboard::A)) {
+					if (player->posX > 0) {
+						Packet mov;
+						type = 2;
+						player->posX -= 1;
+						mov << type;
+						mov << player->ID;
+						mov << player->posX;
+						mov << player->posY;
+						cout << "PosX: " << player->posX << endl;
+						cout << "PosY: " << player->posY << endl;
+						status = socket.send(mov, "localhost", 50000);
+						break;
+					}
+				}
+
+				//Right
+				if (Keyboard::isKeyPressed(Keyboard::D)) {
+					if (player->posX < 9) {
+						Packet mov;
+						type = 2;
+						player->posX += 1;
+						mov << type;
+						mov << player->ID;
+						mov << player->posX;
+						mov << player->posY;
+						cout << "PosX: " << player->posX << endl;
+						cout << "PosY: " << player->posY << endl;
+						status = socket.send(mov, "localhost", 50000);
+						break;
+					}
+				}
+
+				//Up
+				if (Keyboard::isKeyPressed(Keyboard::W)) {
+					if (player->posY > 0) {
+						Packet mov;
+						type = 2;
+						player->posY -= 1;
+						mov << type;
+						mov << player->ID;
+						mov << player->posX;
+						mov << player->posY;
+						cout << "PosX: " << player->posX << endl;
+						cout << "PosY: " << player->posY << endl;
+						status = socket.send(mov, "localhost", 50000);
+						break;
+					}
+				}
+
+				//Down
+				if (Keyboard::isKeyPressed(Keyboard::S)) {
+					if (player->posY < 9) {
+						Packet mov;
+						type = 2;
+						player->posY += 1;
+						mov << type;
+						mov << player->ID;
+						mov << player->posX;
+						mov << player->posY;
+						cout << "PosX: " << player->posX << endl;
+						cout << "PosY: " << player->posY << endl;
+						status = socket.send(mov, "localhost", 50000);
+						break;
+					}
+				}
+				else break;
+
 			default:
 				break;
 
