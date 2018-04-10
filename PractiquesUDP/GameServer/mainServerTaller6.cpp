@@ -23,6 +23,7 @@ int main()
 	Packet conn;
 	string mes;
 	vector<Player*> aPlayers;
+	vector<Packet> ackList;
 	int tempID = 0;
 	int sendType = 0;
 	int recType = 0;
@@ -40,13 +41,14 @@ int main()
 		}
 		else {
 			socket.receive(conn, player->senderIP, player->senderPort);
+			ackList.push_back(conn);
 			conn >> recType;
 			if (recType == 0) {  //Entra nou jugador
 				conn >> mes;
 				tempID++;
 				player->ID = tempID;
-				player->posX = rand() % 10;
-				player->posY = rand() % 10;
+				player->posX = rand() % 587;
+				player->posY = rand() % 587;
 				for (int i = 0; i < aPlayers.size(); i++) {
 					if (aPlayers[i]->posX == player->posX && aPlayers[i]->posY == player->posY) {
 						player->posX += 1;
@@ -56,7 +58,6 @@ int main()
 				ack << player->posX;
 				ack << player->posY;
 				socket.send(ack, player->senderIP, player->senderPort);
-				player->aMessages.push_back(ack);
 				aPlayers.push_back(player);
 
 				cout << "IP: " << player->senderIP << endl;
@@ -74,7 +75,7 @@ int main()
 				}
 				for (int i = 0; i < aPlayers.size(); i++) {
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-					aPlayers[i]->aMessages.push_back(newInfo);
+
 				}
 			}
 			else if (recType == 1) {  //Marxa un jugador

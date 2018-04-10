@@ -157,7 +157,7 @@ int main()
 					if (player->posX > 0) {
 						Packet mov;
 						type = 2;
-						player->posX -= 1;
+						player->posX -= 5;
 						mov << type;
 						mov << player->ID;
 						mov << player->posX;
@@ -171,10 +171,10 @@ int main()
 
 				//Right
 				if (Keyboard::isKeyPressed(Keyboard::D)) {
-					if (player->posX < 9) {
+					if (player->posX < 587) {
 						Packet mov;
 						type = 2;
-						player->posX += 1;
+						player->posX += 5;
 						mov << type;
 						mov << player->ID;
 						mov << player->posX;
@@ -191,7 +191,7 @@ int main()
 					if (player->posY > 0) {
 						Packet mov;
 						type = 2;
-						player->posY -= 1;
+						player->posY -= 5;
 						mov << type;
 						mov << player->ID;
 						mov << player->posX;
@@ -205,10 +205,10 @@ int main()
 
 				//Down
 				if (Keyboard::isKeyPressed(Keyboard::S)) {
-					if (player->posY < 9) {
+					if (player->posY < 587) {
 						Packet mov;
 						type = 2;
-						player->posY += 1;
+						player->posY += 5;
 						mov << type;
 						mov << player->ID;
 						mov << player->posX;
@@ -229,24 +229,25 @@ int main()
 
 		window.clear();
 
-		for (int i = 0; i<10; i++)
-		{
-			for (int j = 0; j<10; j++)
-			{
-				sf::RectangleShape rectBlanco(sf::Vector2f(LADO_CASILLA, LADO_CASILLA));
-				rectBlanco.setFillColor(sf::Color::Black);
-				rectBlanco.setOutlineThickness(3);
-				rectBlanco.setOutlineColor(sf::Color::White);
-				rectBlanco.setPosition(sf::Vector2f(i*LADO_CASILLA, j*LADO_CASILLA));
-				window.draw(rectBlanco);
-			}
-		}
+		//for (int i = 0; i<10; i++)
+		//{
+		//	for (int j = 0; j<10; j++)
+		//	{
+		//		sf::RectangleShape rectBlanco(sf::Vector2f(LADO_CASILLA, LADO_CASILLA));
+		//		rectBlanco.setFillColor(sf::Color::Black);
+		//		rectBlanco.setOutlineThickness(3);
+		//		rectBlanco.setOutlineColor(sf::Color::White);
+		//		rectBlanco.setPosition(sf::Vector2f(i*LADO_CASILLA, j*LADO_CASILLA));
+		//		window.draw(rectBlanco);
+		//	}
+		//}
 
 		//Draw Players
 		CircleShape plCircle(RADIO_AVATAR);
 
 		for (int i = 0; i < aPlayers.size(); ++i) {
-			plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
+		//	plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
+			plCircle.setPosition(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY));
 			if (aPlayers[i]->ID == player->ID) plCircle.setFillColor(sf::Color(255, 0, 0, 255));
 			else plCircle.setFillColor(sf::Color(0, 0, 255, 255));
 			window.draw(plCircle);
