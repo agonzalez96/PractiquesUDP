@@ -72,6 +72,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 					cout << "posY: " << player->posY << endl;
 				}
 			}
+
+			
 			else if (type == 2) {
 				ack >> discID;
 				for (int i = 0; i < aPlayers->size(); i++) {
@@ -103,6 +105,7 @@ int main()
 	Packet conn, disc;
 	Player* player = new Player;
 	vector<Player*> aPlayers;
+	
 	int type = 0;
 	conn << type;
 	conn << "Holi";
