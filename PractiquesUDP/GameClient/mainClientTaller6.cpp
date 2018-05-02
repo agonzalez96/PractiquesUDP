@@ -1,10 +1,3 @@
-#include <SFML\Network.hpp>
-#include <SFML\Graphics.hpp>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <thread>
-#include <cstring>
 #include <PlayerInfo.h>
 
 #define MAX_MENSAJES 30
@@ -39,7 +32,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 	string mess;
 	int type;
 	int count = 0;
-	int discID;
+	int discID, movID;
+	int tempX, tempY;
 	Player* player = new Player;
 
 	while (true) {
@@ -79,31 +73,23 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 				}
 			}
 			else if (type == 2) {
-				aPlayers->resize(0);
-				count - 1;
-				for (int i = 0; i < count; i++) {
-					player = new Player;
-					ack >> player->ID;
-					ack >> player->posX;
-					ack >> player->posY;
-					aPlayers->push_back(player);
-					cout << "ID: " << player->ID << endl;
-					cout << "posX: " << player->posX << endl;
-					cout << "posY: " << player->posY << endl;
+				ack >> discID;
+				for (int i = 0; i < aPlayers->size(); i++) {
+					if (aPlayers->at(i)->ID == discID) {
+						aPlayers->erase(aPlayers->begin() + i);
+						cout << "ID erased: " << aPlayers->at(i)->ID << endl;
+					}
 				}
 			}
 			else if (type == 3) {
-				aPlayers->resize(0);
-				for (int i = 0; i < count; i++) {
-					player = new Player;
-					ack >> player->ID;
-					ack >> player->posX;
-					ack >> player->posY;
-					aPlayers->push_back(player);
-					cout << "ID: " << player->ID << endl;
-					cout << "posX: " << player->posX << endl;
-					cout << "posY: " << player->posY << endl;
-					//  Accedir punter vector if(aPlayers->at(i).)
+				ack >> movID;
+				ack >> tempX;
+				ack >> tempY;
+				for (int i = 0; i < aPlayers->size(); i++) {
+					if (aPlayers->at(i)->ID == movID) {
+						aPlayers->at(i)->posX = tempX;
+						aPlayers->at(i)->posY = tempY;
+					}
 				}
 			}
 		}

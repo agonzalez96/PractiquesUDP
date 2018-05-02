@@ -6,6 +6,7 @@
 #include <vector>
 #include <thread>
 #include <cstring>
+#include <map>
 
 using namespace sf;
 using namespace std;
@@ -17,4 +18,7 @@ struct Player {
 	IpAddress senderIP;
 	unsigned short senderPort;
 	vector<Packet> aMessages;
+	map<int, Packet> ackList;
+	int IDPacket = 0;
+	clock_t PingTime;
 };
