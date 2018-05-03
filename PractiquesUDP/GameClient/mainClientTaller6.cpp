@@ -34,6 +34,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 	int count = 0;
 	int discID, movID;
 	int tempX, tempY;
+	int IDPacket;
 	Player* player = new Player;
 
 	while (true) {
@@ -56,6 +57,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 				ack >> player1->ID;
 				ack >> player1->posX;
 				ack >> player1->posY;
+				ack >> IDPacket;
 				cout << "ID: " << player->ID << endl;
 			}
 			else if (type == 1) {
@@ -70,6 +72,12 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 					cout << "ID: " << player->ID << endl;
 					cout << "posX: " << player->posX << endl;
 					cout << "posY: " << player->posY << endl;
+					ack >> IDPacket;
+					Packet critPack;
+					critPack << 3;
+					critPack << player->ID;
+					critPack << IDPacket;
+					socket->send(critPack, "localhost", 50000);
 				}
 			}
 
@@ -82,6 +90,12 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 						cout << "ID erased: " << aPlayers->at(i)->ID << endl;
 					}
 				}
+				ack >> IDPacket;
+				Packet critPack;
+				critPack << 3;
+				critPack << player->ID;
+				critPack << IDPacket;
+				socket->send(critPack, "localhost", 50000);
 			}
 			else if (type == 3) {
 				ack >> movID;
@@ -93,7 +107,18 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 						aPlayers->at(i)->posY = tempY;
 					}
 				}
+				ack >> IDPacket;
+				Packet critPack;
+				critPack << 3;
+				critPack << player->ID;
+				critPack << IDPacket;
+				socket->send(critPack, "localhost", 50000);
 			}
+			else if (type == 4) {
+				Packet ping;
+				ping << 4;
+				ping << player->ID;
+				socket->send(ping, "localhost", 50000);
 		}
 	}
 }
@@ -110,6 +135,12 @@ int main()
 	conn << type;
 	conn << "Holi";
 
+
+	float secondsPassed = 0.0f;
+	clock_t startTime = clock();
+
+	float millisPassed = 0.0f;
+	clock_t msgListStartTime = clock();
 
 	Socket::Status status = socket.send(conn, "localhost", 50000);
 	if (status != Socket::Done) {
@@ -138,22 +169,13 @@ int main()
 				type = 1;
 				disc << type;
 				disc << player->ID;
-				status = socket.send(disc, "localhost", 50000);
+				socket.send(disc, "localhost", 50000);
 				break;
 
 			case sf::Event::KeyPressed:
 				if (Keyboard::isKeyPressed(Keyboard::A)) {
 					if (player->posX > 0) {
-						Packet mov;
-						type = 2;
 						player->posX -= 5;
-						mov << type;
-						mov << player->ID;
-						mov << player->posX;
-						mov << player->posY;
-						cout << "PosX: " << player->posX << endl;
-						cout << "PosY: " << player->posY << endl;
-						status = socket.send(mov, "localhost", 50000);
 						break;
 					}
 				}
@@ -161,16 +183,7 @@ int main()
 				//Right
 				if (Keyboard::isKeyPressed(Keyboard::D)) {
 					if (player->posX < 587) {
-						Packet mov;
-						type = 2;
 						player->posX += 5;
-						mov << type;
-						mov << player->ID;
-						mov << player->posX;
-						mov << player->posY;
-						cout << "PosX: " << player->posX << endl;
-						cout << "PosY: " << player->posY << endl;
-						status = socket.send(mov, "localhost", 50000);
 						break;
 					}
 				}
@@ -178,16 +191,7 @@ int main()
 				//Up
 				if (Keyboard::isKeyPressed(Keyboard::W)) {
 					if (player->posY > 0) {
-						Packet mov;
-						type = 2;
 						player->posY -= 5;
-						mov << type;
-						mov << player->ID;
-						mov << player->posX;
-						mov << player->posY;
-						cout << "PosX: " << player->posX << endl;
-						cout << "PosY: " << player->posY << endl;
-						status = socket.send(mov, "localhost", 50000);
 						break;
 					}
 				}
@@ -195,18 +199,10 @@ int main()
 				//Down
 				if (Keyboard::isKeyPressed(Keyboard::S)) {
 					if (player->posY < 587) {
-						Packet mov;
-						type = 2;
 						player->posY += 5;
-						mov << type;
-						mov << player->ID;
-						mov << player->posX;
-						mov << player->posY;
-						cout << "PosX: " << player->posX << endl;
-						cout << "PosY: " << player->posY << endl;
-						status = socket.send(mov, "localhost", 50000);
 						break;
 					}
+					
 				}
 				else break;
 
@@ -215,21 +211,21 @@ int main()
 
 			}
 		}
-
+	
+		if (millisPassed > 100) {
+			Packet mov;
+			type = 2;
+			mov << type;
+			mov << player->ID;
+			mov << player->posX;
+			mov << player->posY;
+			cout << "PosX: " << player->posX << endl;
+			cout << "PosY: " << player->posY << endl;
+			socket.send(mov, "localhost", 50000);
+			msgListStartTime = clock();
+		}
+		
 		window.clear();
-
-		//for (int i = 0; i<10; i++)
-		//{
-		//	for (int j = 0; j<10; j++)
-		//	{
-		//		sf::RectangleShape rectBlanco(sf::Vector2f(LADO_CASILLA, LADO_CASILLA));
-		//		rectBlanco.setFillColor(sf::Color::Black);
-		//		rectBlanco.setOutlineThickness(3);
-		//		rectBlanco.setOutlineColor(sf::Color::White);
-		//		rectBlanco.setPosition(sf::Vector2f(i*LADO_CASILLA, j*LADO_CASILLA));
-		//		window.draw(rectBlanco);
-		//	}
-		//}
 
 		//Draw Players
 		CircleShape plCircle(RADIO_AVATAR);
@@ -241,8 +237,10 @@ int main()
 			else plCircle.setFillColor(sf::Color(0, 0, 255, 255));
 			window.draw(plCircle);
 		}
-
 		window.display();
+
+		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+		millisPassed = (clock() - msgListStartTime);
 	}
 	t1.join();
 	return 0;

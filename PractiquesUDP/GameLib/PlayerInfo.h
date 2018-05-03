@@ -14,11 +14,13 @@ using namespace std;
 struct Player {
 	int posX = -1;
 	int posY = -1;
+	int tmpposX = -1;
+	int tmpposY = -1;
 	int ID = -1;
 	IpAddress senderIP;
 	unsigned short senderPort;
 	vector<Packet> aMessages;
 	map<int, Packet> ackList;
 	int IDPacket = 0;
-	clock_t PingTime;
+	int ping;
 };

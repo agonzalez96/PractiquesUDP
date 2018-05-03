@@ -1,0 +1,6 @@
+﻿  mainClientTaller6.cpp
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(127): error C2601: 'main': local function definitions are illegal
+  c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(28): note: this line contains a '{' which has not yet been matched
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(28): fatal error C1075: the left brace '{' was unmatched at the end of the file

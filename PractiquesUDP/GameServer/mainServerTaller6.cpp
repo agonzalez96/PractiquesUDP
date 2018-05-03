@@ -20,12 +20,15 @@ int main()
 	int sendType = 0;
 	int recType = -1;
 	int discID, movID, movX, movY;
+	int tmpIDPacket, tmpID;
 
 	float secondsPassed = 0.0f;
+	float millisPassed = 0.0f;
 
 	Socket::Status status = socket.bind(50000);
 
 	clock_t startTime = clock();
+	clock_t msgListStartTime = clock();
 
 
 	socket.setBlocking(false);
@@ -39,7 +42,8 @@ int main()
 		if (status == sf::Socket::Done) {
 			conn >> recType;
 
-			if (recType == 0) {  //Entra nou jugador
+			//Entra nou jugador
+			if (recType == 0) {  
 
 				//Creem packet amb la posicio del jugador i fem un send
 				conn >> mes;
@@ -58,14 +62,6 @@ int main()
 				ack << player->posX;
 				ack << player->posY;
 				socket.send(ack, player->senderIP, player->senderPort);
-
-
-				for (int i = 0; i < aPlayers.size(); i++) { //
-					Packet tmpPacket;
-					tmpPacket << player->ID;
-					tmpPacket << player->posX;
-					tmpPacket << player->posY;
-				}
 
 				aPlayers.push_back(player);
 
@@ -86,15 +82,18 @@ int main()
 				}
 				//Enviem el packet
 				for (int i = 0; i < aPlayers.size(); i++) {
+					Packet critPack;
+					critPack = newInfo;
+					critPack << aPlayers[i]->IDPacket;
+					aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 					aPlayers[i]->ackList[aPlayers[i]->IDPacket] = newInfo;
-					aPlayers[i]->IDPacket++;
-
+			
 				}
 			}
 
-
-			else if (recType == 1) {  //Marxa un jugador
+			//Marxa un jugador
+			else if (recType == 1) { 
 				conn >> discID;
 				for (int i = 0; i < aPlayers.size(); i++) {
 					if (discID == aPlayers[i]->ID) {
@@ -106,14 +105,17 @@ int main()
 				newInfo << sendType;
 				newInfo << discID;
 				for (int i = 0; i < aPlayers.size(); i++) {
+					Packet critPack;
+					critPack = newInfo;
+					critPack << aPlayers[i]->IDPacket;
+					aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 					aPlayers[i]->ackList[aPlayers[i]->IDPacket] = newInfo;
-					aPlayers[i]->IDPacket++;
 				}
 			}
 
-
-			else if (recType == 2) {  //Es  mou un jugador
+			//Es  mou un jugador
+			else if (recType == 2) {  
 				conn >> movID;
 				Packet newInfo;
 				sendType = 3;
@@ -130,20 +132,71 @@ int main()
 					}
 				}
 				for (int i = 0; i < aPlayers.size(); i++) {
+					Packet critPack;
+					critPack = newInfo;
+					critPack << aPlayers[i]->IDPacket;
+					aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 					aPlayers[i]->ackList[aPlayers[i]->IDPacket] = newInfo;
-					aPlayers[i]->IDPacket++;
+				}
+			}
+			else if (recType == 3) {
+				conn >> tmpID;
+				conn >> tmpIDPacket;
+
+				for (int i = 0; i < aPlayers.size(); i++) {
+					if (aPlayers[i]->ID == tmpID) {
+						aPlayers[i]->ackList.erase(tmpIDPacket);
+					}
+				}
+			}
+			else if (recType == 4) {
+				conn >> tmpID;
+				for (int i = 0; i < aPlayers.size(); i++) {
+					if (aPlayers[i]->ID == tmpID) {
+						aPlayers[i]->ping = 0;
+					}
 				}
 			}
 		}
 		else if (status == sf::Socket::NotReady) {
 		}
-		if (secondsPassed > 0.01) {
+
+		//Critical Pakcets 
+		if (millisPassed > 100) {
+			for (int i = 0; i < aPlayers.size(); i++) {
+				int sizet = aPlayers[i]->ackList.size();
+				if (aPlayers[i]->ackList.size() != 0) {
+					for (int j = 0; j < aPlayers[i]->ackList.size(); j++) {
+						Packet aux;
+						aux = aPlayers[i]->ackList.at(aPlayers[i]->ackList.begin() + j);
+						socket.send(aux, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+					}
+				}
+			}
+			msgListStartTime = clock();
+			
+		}
+
+		//PING
+		if (secondsPassed > 1) {
 			startTime = clock();
-			cout << "holiii";
+			for (int i = 0; i < aPlayers.size(); i++) {
+				Packet _ping;
+				sendType = 4;
+				_ping << sendType;
+				aPlayers[i]->ping++;
+			}
+		}
+
+		for (int i = 0; i < aPlayers.size(); i++) {
+			if (aPlayers[i]->ping >= 60)
+				aPlayers.erase(aPlayers.begin() + i);
 		}
 
 		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+		millisPassed = (clock() - msgListStartTime);
+		//cout << to_string(millisPassed) << endl;
 	}
 	
 	system("pause");
