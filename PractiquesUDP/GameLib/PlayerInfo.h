@@ -42,3 +42,5 @@ struct Coin {
 	int posX = -1;
 	int posY = -1;
 };
+
+

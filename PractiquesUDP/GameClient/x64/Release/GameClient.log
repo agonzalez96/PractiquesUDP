@@ -1,12 +1,11 @@
 ﻿  mainClientTaller6.cpp
 mainClientTaller6.cpp(11): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 mainClientTaller6.cpp(12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(31): warning C4101: 'tmpIDPacket': unreferenced local variable
-mainClientTaller6.cpp(291): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(299): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(305): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(292): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(300): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 mainClientTaller6.cpp(306): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-mainClientTaller6.cpp(160): warning C4101: 'print': unreferenced local variable
+mainClientTaller6.cpp(307): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(161): warning C4101: 'print': unreferenced local variable
   Generating code
   All 315 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code

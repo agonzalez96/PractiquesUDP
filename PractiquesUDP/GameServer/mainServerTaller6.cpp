@@ -69,8 +69,8 @@ int main()
 				welcome << player->posY;
 				welcome << coin->posX;
 				welcome << coin->posY;
-				socket.send(welcome, player->senderIP, player->senderPort);
 
+				socket.send(welcome, player->senderIP, player->senderPort);
 				aPlayers.push_back(player);
 
 				cout << "IP: " << player->senderIP << endl;
@@ -86,16 +86,16 @@ int main()
 				for (int j = 0; j < aPlayers.size(); j++) {
 					newInfo << aPlayers[j]->ID;
 					newInfo << aPlayers[j]->posX;
-					newInfo << aPlayers[j]->posY;
+					newInfo << aPlayers[j]->posY; 
+					newInfo << aPlayers[j]->IDPacket;
+					aPlayers[j]->ackList[aPlayers[j]->IDPacket] = newInfo;
+					aPlayers[j]->IDPacket++;
 				}
+
 				//Enviem el packet
 				for (int i = 0; i < aPlayers.size(); i++) {
-					/*Packet critPack;
-					critPack = newInfo;
-					critPack << aPlayers[i]->IDPacket;*/
-					//aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-					//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
+
 			
 				}
 				recType = -1;
@@ -114,12 +114,7 @@ int main()
 				newInfo << sendType;
 				newInfo << discID;
 				for (int i = 0; i < aPlayers.size(); i++) {
-					/*Packet critPack;
-					critPack = newInfo;
-					critPack << aPlayers[i]->IDPacket;*/
-				//	aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-					//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
 				}
 
 				recType = -1;
@@ -143,18 +138,13 @@ int main()
 					}
 				}
 				for (int i = 0; i < aPlayers.size(); i++) {
-					/*Packet critPack;
-					critPack = newInfo;
-					critPack << aPlayers[i]->IDPacket;*/
-					//aPlayers[i]->IDPacket++;
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-					//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
 				}
 				recType = -1;
 			}
 
 			//Critical packet ACK
-			/*else if (recType == 3) {
+			else if (recType == 3) {
 				conn >> tmpID;
 				conn >> tmpIDPacket;
 
@@ -164,7 +154,7 @@ int main()
 					}
 				}
 				recType = -1;
-			}*/
+			}
 
 			//PING reset
 			else if (recType == 4) {
@@ -280,17 +270,17 @@ int main()
 		//}
 
 		//Critical Pakcets 
-		//if (millisPassed > 100) {
-		//	for (int i = 0; i < aPlayers.size(); i++) {
-		//		if (aPlayers[i]->ackList.size() != 0) {
-		//			for (map<int, Packet>::iterator it = aPlayers[i]->ackList.begin(); it != aPlayers[i]->ackList.end(); ++it) {
-		//				//socket.send(it->second, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-		//			}
-		//		}
-		//	}
-		//	msgListStartTime = clock();
-		//	
-		//}
+		if (millisPassed > 500) {
+			for (int i = 0; i < aPlayers.size(); i++) {
+				if (aPlayers[i]->ackList.size() != 0) {
+					for (map<int, Packet>::iterator it = aPlayers[i]->ackList.begin(); it != aPlayers[i]->ackList.end(); ++it) {
+						socket.send(it->second, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+					}
+				}
+			}
+			msgListStartTime = clock();
+			
+		}
 
 		//PING
 		if (secondsPassed > 1) {

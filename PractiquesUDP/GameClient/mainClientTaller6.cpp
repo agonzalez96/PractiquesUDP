@@ -68,12 +68,13 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 					cout << "ID: " << player->ID << endl;
 					cout << "posX: " << player->posX << endl;
 					cout << "posY: " << player->posY << endl;
-					/*ack >> tmpIDPacket;
+					ack >> tmpIDPacket;
+					cout << tmpIDPacket << endl;
 					Packet critPack;
 					critPack << 3;
 					critPack << player->ID;
 					critPack << tmpIDPacket;
-					socket->send(critPack, "localhost", 50000);*/
+					socket->send(critPack, "localhost", 50000);
 				}
 			}
 
