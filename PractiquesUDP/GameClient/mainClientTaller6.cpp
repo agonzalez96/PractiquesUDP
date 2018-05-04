@@ -5,6 +5,7 @@
 #define SIZE_TABLERO 100
 #define LADO_CASILLA 64
 #define RADIO_AVATAR 25.f
+#define RADIO_COIN 15.f
 #define OFFSET_AVATAR 5
 
 using namespace sf;
@@ -34,7 +35,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 	int count = 0;
 	int discID, movID;
 	int tempX, tempY;
-	int IDPacket;
+	int tmpIDPacket;
 	Player* player = new Player;
 
 	while (true) {
@@ -57,7 +58,6 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 				ack >> player1->ID;
 				ack >> player1->posX;
 				ack >> player1->posY;
-				ack >> IDPacket;
 				cout << "ID: " << player->ID << endl;
 			}
 			else if (type == 1) {
@@ -72,12 +72,12 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 					cout << "ID: " << player->ID << endl;
 					cout << "posX: " << player->posX << endl;
 					cout << "posY: " << player->posY << endl;
-					ack >> IDPacket;
+					/*ack >> tmpIDPacket;
 					Packet critPack;
 					critPack << 3;
 					critPack << player->ID;
-					critPack << IDPacket;
-					socket->send(critPack, "localhost", 50000);
+					critPack << tmpIDPacket;
+					socket->send(critPack, "localhost", 50000);*/
 				}
 			}
 
@@ -90,12 +90,12 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 						cout << "ID erased: " << aPlayers->at(i)->ID << endl;
 					}
 				}
-				ack >> IDPacket;
+				/*ack >> tmpIDPacket;
 				Packet critPack;
 				critPack << 3;
 				critPack << player->ID;
-				critPack << IDPacket;
-				socket->send(critPack, "localhost", 50000);
+				critPack << tmpIDPacket;
+				socket->send(critPack, "localhost", 50000);*/
 			}
 			else if (type == 3) {
 				ack >> movID;
@@ -107,18 +107,19 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 						aPlayers->at(i)->posY = tempY;
 					}
 				}
-				ack >> IDPacket;
+				/*ack >> tmpIDPacket;
 				Packet critPack;
 				critPack << 3;
 				critPack << player->ID;
-				critPack << IDPacket;
-				socket->send(critPack, "localhost", 50000);
+				critPack << tmpIDPacket;
+				socket->send(critPack, "localhost", 50000);*/
 			}
 			else if (type == 4) {
 				Packet ping;
 				ping << 4;
 				ping << player->ID;
 				socket->send(ping, "localhost", 50000);
+			}
 		}
 	}
 }
@@ -130,6 +131,7 @@ int main()
 	Packet conn, disc;
 	Player* player = new Player;
 	vector<Player*> aPlayers;
+	Coin* coin = new Coin;
 	
 	int type = 0;
 	conn << type;
@@ -219,8 +221,8 @@ int main()
 			mov << player->ID;
 			mov << player->posX;
 			mov << player->posY;
-			cout << "PosX: " << player->posX << endl;
-			cout << "PosY: " << player->posY << endl;
+			//cout << "PosX: " << player->posX << endl;
+			//cout << "PosY: " << player->posY << endl;
 			socket.send(mov, "localhost", 50000);
 			msgListStartTime = clock();
 		}
@@ -229,7 +231,7 @@ int main()
 
 		//Draw Players
 		CircleShape plCircle(RADIO_AVATAR);
-
+		
 		for (int i = 0; i < aPlayers.size(); ++i) {
 		//	plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
 			plCircle.setPosition(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY));
@@ -237,6 +239,13 @@ int main()
 			else plCircle.setFillColor(sf::Color(0, 0, 255, 255));
 			window.draw(plCircle);
 		}
+
+		//DrawCoin
+		CircleShape coinCircle(RADIO_COIN);
+		plCircle.setPosition(Vector2f(coin->posX, coin->posY));
+		coinCircle.setFillColor(sf::Color(255, 255, 0, 255));
+		window.draw(coinCircle);
+
 		window.display();
 
 		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;

@@ -1,1 +1,11 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets(76,5): warning : Access to the path 'c:\users\alumno\documents\practiquesudp\practiquesudp\x64\release\gameclient.exe' is denied.
+﻿  mainClientTaller6.cpp
+mainClientTaller6.cpp(17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(235): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(242): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(243): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(128): warning C4101: 'print': unreferenced local variable
+  Generating code
+  All 308 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  GameClient.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Release\GameClient.exe

@@ -21,6 +21,11 @@ struct Player {
 	unsigned short senderPort;
 	vector<Packet> aMessages;
 	map<int, Packet> ackList;
-	int IDPacket = 0;
+	int IDPacket = 1;
 	int ping;
+};
+
+struct Coin {
+	int posX = 150;
+	int posY = 150;
 };

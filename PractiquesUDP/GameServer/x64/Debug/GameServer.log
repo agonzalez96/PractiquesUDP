@@ -1,6 +1,6 @@
 ﻿  mainServerTaller6.cpp
 c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(168): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(197): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(198): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(223): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(224): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameserver\mainservertaller6.cpp(23): warning C4101: 'tmpIDPacket': unreferenced local variable
   GameServer.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Debug\GameServer.exe
