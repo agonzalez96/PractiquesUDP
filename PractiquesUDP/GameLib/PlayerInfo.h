@@ -8,6 +8,15 @@
 #include <cstring>
 #include <map>
 
+
+#define MAX_MENSAJES 30
+
+#define SIZE_TABLERO 100
+#define LADO_CASILLA 64
+#define RADIO_AVATAR 25.f
+#define RADIO_COIN 15.f
+#define OFFSET_AVATAR 5
+
 using namespace sf;
 using namespace std;
 
@@ -23,9 +32,11 @@ struct Player {
 	map<int, Packet> ackList;
 	int IDPacket = 1;
 	int ping;
+	int score = 0;
+	bool win = false;
 };
 
 struct Coin {
-	int posX = 150;
-	int posY = 150;
+	int posX = -1;
+	int posY = -1;
 };

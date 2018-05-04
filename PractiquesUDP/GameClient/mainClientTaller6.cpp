@@ -1,12 +1,5 @@
 #include <PlayerInfo.h>
 
-#define MAX_MENSAJES 30
-
-#define SIZE_TABLERO 100
-#define LADO_CASILLA 64
-#define RADIO_AVATAR 25.f
-#define RADIO_COIN 15.f
-#define OFFSET_AVATAR 5
 
 using namespace sf;
 using namespace std;
@@ -26,16 +19,17 @@ Vector2f BoardToWindows(Vector2f _position)
 	return Vector2f(_position.x*LADO_CASILLA + OFFSET_AVATAR, _position.y*LADO_CASILLA + OFFSET_AVATAR);
 }
 
-void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) {
+void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, Coin* coin1) {
 	IpAddress senderIP;
 	unsigned short senderPort;
 	Packet ack;
 	string mess;
 	int type;
 	int count = 0;
-	int discID, movID;
+	int discID, movID, scoreID;
 	int tempX, tempY;
 	int tmpIDPacket;
+	int tmpScore;
 	Player* player = new Player;
 
 	while (true) {
@@ -58,6 +52,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 				ack >> player1->ID;
 				ack >> player1->posX;
 				ack >> player1->posY;
+				ack >> coin1->posX;
+				ack >> coin1->posY;
 				cout << "ID: " << player->ID << endl;
 			}
 			else if (type == 1) {
@@ -120,6 +116,24 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1) 
 				ping << player->ID;
 				socket->send(ping, "localhost", 50000);
 			}
+			else if (type == 5) {
+				ack >> coin1->posX;
+				ack >> coin1->posY;
+				ack >> scoreID;
+				ack >> tmpScore;
+				player1->score = tmpScore;
+				for (int i = 0; i < aPlayers->size(); i++) {
+					if (aPlayers->at(i)->ID == scoreID) {
+						aPlayers->at(i)->score = player1->score;
+						cout << "ID: " << aPlayers->at(i)->ID << " Score: " << aPlayers->at(i)->score;
+					}
+				}
+			}
+			else if (type == 6) {
+				ack >> mess;
+				cout << mess;
+				player1->win = true;
+			}
 		}
 	}
 }
@@ -152,13 +166,13 @@ int main()
 
 	}
 
-	thread t1(&receiveData, &socket, &aPlayers, player);
+	thread t1(&receiveData, &socket, &aPlayers, player, coin);
 
 	sf::Vector2f casillaOrigen, casillaDestino;
 
 	sf::RenderWindow window(sf::VideoMode(640, 640), "UDP");
 
-	while (window.isOpen())
+	while (window.isOpen() || !player->win)
 	{
 		sf::Event event;
 
@@ -242,7 +256,7 @@ int main()
 
 		//DrawCoin
 		CircleShape coinCircle(RADIO_COIN);
-		plCircle.setPosition(Vector2f(coin->posX, coin->posY));
+		coinCircle.setPosition(Vector2f(coin->posX, coin->posY));
 		coinCircle.setFillColor(sf::Color(255, 255, 0, 255));
 		window.draw(coinCircle);
 

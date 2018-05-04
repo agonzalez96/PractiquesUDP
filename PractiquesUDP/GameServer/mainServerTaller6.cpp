@@ -21,6 +21,12 @@ int main()
 	int recType = -1;
 	int discID, movID, movX, movY;
 	int tmpIDPacket, tmpID;
+	float dist;
+	bool win = false;
+
+	Coin* coin = new Coin;
+	coin->posX = rand() % 587;
+	coin->posY = rand() % 587;
 
 	float secondsPassed = 0.0f;
 	float millisPassed = 0.0f;
@@ -32,7 +38,7 @@ int main()
 
 
 	socket.setBlocking(false);
-	while (true) {
+	while (win != true) {
 		Packet welcome;
 		sendType = 0;
 		welcome << sendType;
@@ -61,6 +67,8 @@ int main()
 				welcome << player->ID;
 				welcome << player->posX;
 				welcome << player->posY;
+				welcome << coin->posX;
+				welcome << coin->posY;
 				socket.send(welcome, player->senderIP, player->senderPort);
 
 				aPlayers.push_back(player);
@@ -142,9 +150,9 @@ int main()
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 					//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
 				}
-
 				recType = -1;
 			}
+
 			//Critical packet ACK
 			/*else if (recType == 3) {
 				conn >> tmpID;
@@ -173,6 +181,66 @@ int main()
 		}
 		else if (status == sf::Socket::NotReady) {
 		}
+
+		//Agafar monedes
+		for (int i = 0; i < aPlayers.size(); i++) {
+			dist = sqrt(pow((coin->posX - aPlayers[i]->posX), 2) + pow((coin->posY - aPlayers[i]->posY), 2));
+			if (dist <= RADIO_COIN + RADIO_AVATAR) {
+				Packet newInfo;
+				coin->posX = rand() % 587;
+				coin->posY = rand() % 587;
+				aPlayers[i]->score++;
+				sendType = 5;
+				newInfo << sendType;
+				newInfo << coin->posX;
+				newInfo << coin->posY;
+				newInfo << aPlayers[i]->ID;
+				newInfo << aPlayers[i]->score;
+				for (int j = 0; j < aPlayers.size(); j++) {
+					socket.send(newInfo, aPlayers[j]->senderIP, aPlayers[j]->senderPort);
+				}
+			}
+		}
+
+		//Condicio victoria
+		for (int i = 0; i < aPlayers.size(); i++) {
+			if (aPlayers[i]->score == 3) {
+				string victorymes;
+				victorymes = "Player " + to_string(aPlayers[i]->ID) + " wins";
+				Packet victory;
+				sendType = 6;
+				victory << sendType;
+				victory << victorymes;
+				for (int j = 0; j < aPlayers.size(); j++) {
+					socket.send(victory, aPlayers[j]->senderIP, aPlayers[j]->senderPort);
+				}
+				win = true;
+			}
+		}
+
+
+		//Acumulacio moviment
+		//if (millisPassed > 100) {
+		//	Packet newInfo;
+		//	sendType = 3;
+		//	newInfo << sendType;
+		//	for (int i = 0; i < aPlayers.size(); i++) {
+		//		if (movID == aPlayers[i]->ID) {
+		//			newInfo << aPlayers[i]->ID;
+		//			newInfo << aPlayers[i]->posX;
+		//			newInfo << aPlayers[i]->posY;
+		//		}
+		//	}
+		//	for (int i = 0; i < aPlayers.size(); i++) {
+		//		/*Packet critPack;
+		//		critPack = newInfo;
+		//		critPack << aPlayers[i]->IDPacket;*/
+		//		//aPlayers[i]->IDPacket++;
+		//		socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+		//		//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
+		//	}
+		//	msgListStartTime = clock();
+		//}
 
 		//Critical Pakcets 
 		//if (millisPassed > 100) {
@@ -224,7 +292,5 @@ int main()
 		millisPassed = (clock() - msgListStartTime);
 		//cout << to_string(millisPassed) << endl;
 	}
-	
-	system("pause");
 	return 0;
 }

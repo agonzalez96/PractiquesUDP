@@ -2,9 +2,9 @@
 c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(38): warning C4101: 'tmpIDPacket': unreferenced local variable
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(237): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(245): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(251): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(252): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(129): warning C4101: 'print': unreferenced local variable
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(239): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(247): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(253): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(254): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+c:\users\alumno\documents\practiquesudp\practiquesudp\gameclient\mainclienttaller6.cpp(131): warning C4101: 'print': unreferenced local variable
   GameClient.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Debug\GameClient.exe

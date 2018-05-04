@@ -1,11 +1,13 @@
 ﻿  mainClientTaller6.cpp
-mainClientTaller6.cpp(17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(235): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-mainClientTaller6.cpp(242): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-mainClientTaller6.cpp(243): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-mainClientTaller6.cpp(128): warning C4101: 'print': unreferenced local variable
+mainClientTaller6.cpp(11): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(31): warning C4101: 'tmpIDPacket': unreferenced local variable
+mainClientTaller6.cpp(251): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(259): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+mainClientTaller6.cpp(265): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(266): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainClientTaller6.cpp(143): warning C4101: 'print': unreferenced local variable
   Generating code
-  All 308 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 315 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   GameClient.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Release\GameClient.exe
