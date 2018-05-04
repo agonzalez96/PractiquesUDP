@@ -174,6 +174,43 @@ int main()
 						aPlayers[i]->ping = 0;
 					}
 				}
+				recType = -1;
+			}
+			else if (recType == 5) {
+				coin->posX = rand() % 587;
+				coin->posY = rand() % 587;
+				Packet newInfo;
+				sendType = 7;
+				newInfo << sendType;
+				newInfo << coin->posX;
+				newInfo << coin->posY;
+				for (int j = 0; j < aPlayers.size(); j++) {
+					socket.send(newInfo, aPlayers[j]->senderIP, aPlayers[j]->senderPort);
+				}
+				recType = -1;
+			}
+
+			else if (recType == 6) {
+				conn >> tmpID;
+				int tmpX, tmpY;
+				tmpX = rand() % 587;
+				tmpY = rand() % 587;
+				for (int i = 0; i < aPlayers.size(); i++) {
+					if (aPlayers[i]->ID == tmpID) {
+						aPlayers[i]->posX = tmpX;
+						aPlayers[i]->posY = tmpY;
+						Packet sk;
+						sendType = 8;
+						sk << sendType;
+						sk << aPlayers[i]->ID;
+						sk << aPlayers[i]->posX;
+						sk << aPlayers[i]->posY;
+						for (int j = 0; j < aPlayers.size(); j++) {
+							socket.send(sk, aPlayers[j]->senderIP, aPlayers[j]->senderPort);
+						}
+					}
+				}
+				recType = -1;
 			}
 			else {
 				//Nothing

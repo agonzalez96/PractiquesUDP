@@ -26,7 +26,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 	string mess;
 	int type;
 	int count = 0;
-	int discID, movID, scoreID;
+	int discID, movID, scoreID, sk1ID;
 	int tempX, tempY;
 	int tmpIDPacket;
 	int tmpScore;
@@ -134,6 +134,23 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				cout << mess;
 				player1->win = true;
 			}
+			else if (type == 7) {
+				ack >> coin1->posX;
+				ack >> coin1->posY;
+			}
+			else if (type == 8) {
+				ack >> sk1ID;
+				ack >> tempX;
+				ack >> tempY;
+				for (int i = 0; i < aPlayers->size(); i++) {
+					if (aPlayers->at(i)->ID == sk1ID) {
+						aPlayers->at(i)->posX = tempX;
+						aPlayers->at(i)->posY = tempY;
+						player1->posX = tempX;
+						player1->posY = tempY;
+					}
+				}
+			}
 		}
 	}
 }
@@ -219,6 +236,29 @@ int main()
 						break;
 					}
 					
+				}
+				if (Keyboard::isKeyPressed(Keyboard::E)) {
+					if (player->sk1Used == false) {
+						Packet sk;
+						type = 5;
+						sk << type;
+						socket.send(sk, "localhost", 50000);
+						player->sk1Used = true;
+						break;
+					}
+
+				}
+				if (Keyboard::isKeyPressed(Keyboard::Q)) {
+					if (player->sk2Used == false) {
+						Packet sk;
+						type = 6;
+						sk << type;
+						sk << player->ID;
+						socket.send(sk, "localhost", 50000);
+						player->sk2Used = true;
+						break;
+					}
+
 				}
 				else break;
 

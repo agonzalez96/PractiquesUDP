@@ -34,6 +34,8 @@ struct Player {
 	int ping;
 	int score = 0;
 	bool win = false;
+	bool sk1Used = false;
+	bool sk2Used = false;
 };
 
 struct Coin {
