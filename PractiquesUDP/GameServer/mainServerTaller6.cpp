@@ -2,6 +2,15 @@
 
 #define MAX_MENSAJES 30
 
+#define ENTRA_NOU_JUGADOR 0
+#define DESCONNEXIO 1
+#define MOVIMENT 2
+#define ACK_CRITICAL_PACKET 3
+#define PING_RESET 4
+#define SKILL1 5
+#define SKILL2 6
+
+
 using namespace sf;
 using namespace std;
 
@@ -49,29 +58,66 @@ int main()
 			conn >> recType;
 
 			//Entra nou jugador
-			if (recType == 0) {  
+			if (recType == ENTRA_NOU_JUGADOR) {
 
-				//Creem packet amb la posicio del jugador i fem un send
-				conn >> mes;
-				tempID++;
-				player->ID = tempID;
-				player->posX = rand() % 587;
-				player->posY = rand() % 587;
+				for (int i = 0; i < aPlayers.size(); i++) {
+					if (player->senderIP == aPlayers[i]->senderIP && player->senderPort == aPlayers[i]->senderPort) {
+						welcome << aPlayers[i]->ID;
+						welcome << aPlayers[i]->posX;
+						welcome << aPlayers[i]->posY;
+						welcome << coin->posX;
+						welcome << coin->posY;
 
-				for (int i = 0; i < aPlayers.size(); i++) { //Si la posicio esta ocupada
-					if (aPlayers[i]->posX == player->posX && aPlayers[i]->posY == player->posY) {
-						player->posX += 100;
-						player->posY += 100;
+						socket.send(welcome, player->senderIP, player->senderPort);
+					}
+					else {
+						tempID++;
+						player->ID = tempID;
+						player->posX = rand() % 587;
+						player->posY = rand() % 587;
+
+						for (int i = 0; i < aPlayers.size(); i++) { //Si la posicio esta ocupada
+							if (aPlayers[i]->posX == player->posX && aPlayers[i]->posY == player->posY) {
+								player->posX += 100;
+								player->posY += 100;
+							}
+						}
+						welcome << player->ID;
+						welcome << player->posX;
+						welcome << player->posY;
+						welcome << coin->posX;
+						welcome << coin->posY;
+
+						socket.send(welcome, player->senderIP, player->senderPort);
+						aPlayers.push_back(player);
 					}
 				}
-				welcome << player->ID;
-				welcome << player->posX;
-				welcome << player->posY;
-				welcome << coin->posX;
-				welcome << coin->posY;
 
-				socket.send(welcome, player->senderIP, player->senderPort);
-				aPlayers.push_back(player);
+				if (aPlayers.empty()) {
+
+					tempID++;
+					player->ID = tempID;
+					player->posX = rand() % 587;
+					player->posY = rand() % 587;
+
+					for (int i = 0; i < aPlayers.size(); i++) { //Si la posicio esta ocupada
+						if (aPlayers[i]->posX == player->posX && aPlayers[i]->posY == player->posY) {
+							player->posX += 100;
+							player->posY += 100;
+						}
+					}
+					welcome << player->ID;
+					welcome << player->posX;
+					welcome << player->posY;
+					welcome << coin->posX;
+					welcome << coin->posY;
+
+					socket.send(welcome, player->senderIP, player->senderPort);
+					aPlayers.push_back(player);
+				}
+				//Creem packet amb la posicio del jugador i fem un send
+				conn >> mes;
+				
 
 				cout << "IP: " << player->senderIP << endl;
 				cout << "Port: " << player->senderPort << endl;
@@ -86,7 +132,7 @@ int main()
 				for (int j = 0; j < aPlayers.size(); j++) {
 					newInfo << aPlayers[j]->ID;
 					newInfo << aPlayers[j]->posX;
-					newInfo << aPlayers[j]->posY; 
+					newInfo << aPlayers[j]->posY;
 					newInfo << aPlayers[j]->IDPacket;
 					aPlayers[j]->ackList[aPlayers[j]->IDPacket] = newInfo;
 					aPlayers[j]->IDPacket++;
@@ -96,13 +142,13 @@ int main()
 				for (int i = 0; i < aPlayers.size(); i++) {
 					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 
-			
+
 				}
 				recType = -1;
 			}
 
 			//Marxa un jugador
-			else if (recType == 1) { 
+			else if (recType == DESCONNEXIO) {
 				conn >> discID;
 				for (int i = 0; i < aPlayers.size(); i++) {
 					if (discID == aPlayers[i]->ID) {
@@ -121,7 +167,7 @@ int main()
 			}
 
 			//Es  mou un jugador
-			else if (recType == 2) {  
+			else if (recType == MOVIMENT) {
 				conn >> movID;
 				Packet newInfo;
 				sendType = 3;
@@ -142,9 +188,22 @@ int main()
 				}
 				recType = -1;
 			}
+			//Acumulacion (NO FUNCIONA)
+			/*	else if (recType == 2) {
+			conn >> movID;
+			conn >> deltaX;
+			conn >> deltaY;
+			Positions_server temp;
+			temp.ID = movID;
+			temp.delta_X = deltaX;
+			temp.delta_Y = deltaY;
+			server_acum.push_back(temp);
+
+			recType = -1;
+			}*/
 
 			//Critical packet ACK
-			else if (recType == 3) {
+			else if (recType == ACK_CRITICAL_PACKET) {
 				conn >> tmpID;
 				conn >> tmpIDPacket;
 
@@ -157,7 +216,7 @@ int main()
 			}
 
 			//PING reset
-			else if (recType == 4) {
+			else if (recType == PING_RESET) {
 				conn >> tmpID;
 				for (int i = 0; i < aPlayers.size(); i++) {
 					if (aPlayers[i]->ID == tmpID) {
@@ -166,7 +225,9 @@ int main()
 				}
 				recType = -1;
 			}
-			else if (recType == 5) {
+
+			//Skill Move Positions
+			else if (recType == SKILL1) {
 				coin->posX = rand() % 587;
 				coin->posY = rand() % 587;
 				Packet newInfo;
@@ -180,7 +241,8 @@ int main()
 				recType = -1;
 			}
 
-			else if (recType == 6) {
+			//Skill cambiar moneda de posicion
+			else if (recType == SKILL2) {
 				conn >> tmpID;
 				int tmpX, tmpY;
 				tmpX = rand() % 587;
@@ -231,7 +293,7 @@ int main()
 
 		//Condicio victoria
 		for (int i = 0; i < aPlayers.size(); i++) {
-			if (aPlayers[i]->score == 3) {
+			if (aPlayers[i]->score == 10) {
 				string victorymes;
 				victorymes = "Player " + to_string(aPlayers[i]->ID) + " wins";
 				Packet victory;
@@ -247,27 +309,29 @@ int main()
 
 
 		//Acumulacio moviment
-		//if (millisPassed > 100) {
-		//	Packet newInfo;
-		//	sendType = 3;
-		//	newInfo << sendType;
-		//	for (int i = 0; i < aPlayers.size(); i++) {
-		//		if (movID == aPlayers[i]->ID) {
-		//			newInfo << aPlayers[i]->ID;
-		//			newInfo << aPlayers[i]->posX;
-		//			newInfo << aPlayers[i]->posY;
-		//		}
-		//	}
-		//	for (int i = 0; i < aPlayers.size(); i++) {
-		//		/*Packet critPack;
-		//		critPack = newInfo;
-		//		critPack << aPlayers[i]->IDPacket;*/
-		//		//aPlayers[i]->IDPacket++;
-		//		socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-		//		//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
-		//	}
-		//	msgListStartTime = clock();
-		//}
+		/*if (millisPassed > 100) {
+		Packet newInfo;
+		sendType = 3;
+		newInfo << sendType;
+		for (int i = 0; i < aPlayers.size(); i++) {
+		for (int j = 0; j < server_acum.size(); j++) {
+		if (aPlayers[i]->ID == server_acum[j].ID) {
+		aPlayers[i]->posX += server_acum[j].delta_X;
+		aPlayers[i]->posY += server_acum[j].delta_Y;
+		newInfo << aPlayers[i]->ID;
+		newInfo << aPlayers[i]->posX;
+		newInfo << aPlayers[i]->posY;
+		server_acum.erase(server_acum.begin() + j);
+		}
+		}
+		}
+		for (int i = 0; i < aPlayers.size(); i++) {
+
+		socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
+		}
+
+		msgListStartTime = clock();
+		}*/
 
 		//Critical Pakcets 
 		if (millisPassed > 500) {
@@ -279,7 +343,7 @@ int main()
 				}
 			}
 			msgListStartTime = clock();
-			
+
 		}
 
 		//PING
@@ -312,7 +376,7 @@ int main()
 					//aPlayers[i]->ackList[aPlayers[i]->IDPacket] = critPack;
 				}
 			}
-			
+
 		}
 
 		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;

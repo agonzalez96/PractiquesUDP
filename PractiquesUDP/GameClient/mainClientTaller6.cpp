@@ -1,5 +1,14 @@
 #include <PlayerInfo.h>
 
+#define INICIALITZACIO_PLAYER 0
+#define INICIALITZACIO_VECTOR_PLAYERS 1
+#define DESCONNEXIO 2
+#define MOVIMENT 3
+#define PING 4
+#define SUMAMONEDA 5
+#define WIN 6
+#define SKILL_1 7
+#define SKILL_2 8
 
 using namespace sf;
 using namespace std;
@@ -46,7 +55,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 		{
 			//FUNCIONA
 			ack >> type;
-			if (type == 0) {
+			if (type == INICIALITZACIO_PLAYER) {
 				ack >> mess;
 				cout << mess << endl;
 				ack >> player1->ID;
@@ -55,8 +64,9 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				ack >> coin1->posX;
 				ack >> coin1->posY;
 				cout << "ID: " << player->ID << endl;
+				player1->start = true;
 			}
-			else if (type == 1) {
+			else if (type == INICIALITZACIO_VECTOR_PLAYERS) {
 				aPlayers->resize(0);
 				ack >> count;
 				for (int i = 0; i < count; i++) {
@@ -78,8 +88,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				}
 			}
 
-			
-			else if (type == 2) {
+
+			else if (type == DESCONNEXIO) {
 				ack >> discID;
 				for (int i = 0; i < aPlayers->size(); i++) {
 					if (aPlayers->at(i)->ID == discID) {
@@ -87,14 +97,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 						cout << "ID erased: " << aPlayers->at(i)->ID << endl;
 					}
 				}
-				/*ack >> tmpIDPacket;
-				Packet critPack;
-				critPack << 3;
-				critPack << player->ID;
-				critPack << tmpIDPacket;
-				socket->send(critPack, "localhost", 50000);*/
 			}
-			else if (type == 3) {
+			else if (type == MOVIMENT) {
 				ack >> movID;
 				ack >> tempX;
 				ack >> tempY;
@@ -104,20 +108,43 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 						aPlayers->at(i)->posY = tempY;
 					}
 				}
-				/*ack >> tmpIDPacket;
-				Packet critPack;
-				critPack << 3;
-				critPack << player->ID;
-				critPack << tmpIDPacket;
-				socket->send(critPack, "localhost", 50000);*/
 			}
-			else if (type == 4) {
+			// Reconcialiacion y prediccion (NO FUNCIONA DEL TODO BIEN)
+			//else if (type == MOVIMENT) {
+			//	ack >> movID;
+			//	ack >> tempX;
+			//	ack >> tempY;
+			//	for (int i = 0; i < aPlayers->size(); i++) {
+			//		for (int j = 0; j < aPlayers->size(); j++) {
+			//			if (aPlayers->at(i)->ID == movID) {
+			//				if (aPlayers->at(i)->posX += aPlayers->at(i)->acumulate[j].delta_X == tempX) {
+			//					aPlayers->at(i)->posX += aPlayers->at(i)->acumulate[j].delta_X;
+			//					if (aPlayers->at(i)->posY += aPlayers->at(i)->acumulate[j].delta_Y == tempY) {
+			//						aPlayers->at(i)->posY += aPlayers->at(i)->acumulate[j].delta_Y;
+			//					}
+			//				}
+			//				else {
+			//					aPlayers->at(i)->posX += tempX;
+			//					aPlayers->at(i)->posY += tempY;
+			//				}
+			//				aPlayers->at(i)->acumulate.erase(aPlayers->at(i)->acumulate.begin + j);
+			//			}
+			//		}
+			//	}
+			//	/*ack >> tmpIDPacket;
+			//	Packet critPack;
+			//	critPack << 3;
+			//	critPack << player->ID;
+			//	critPack << tmpIDPacket;
+			//	socket->send(critPack, "localhost", 50000);*/
+			//}
+			else if (type == PING) {
 				Packet ping;
 				ping << 4;
 				ping << player->ID;
 				socket->send(ping, "localhost", 50000);
 			}
-			else if (type == 5) {
+			else if (type == SUMAMONEDA) {
 				ack >> coin1->posX;
 				ack >> coin1->posY;
 				ack >> scoreID;
@@ -126,20 +153,20 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				for (int i = 0; i < aPlayers->size(); i++) {
 					if (aPlayers->at(i)->ID == scoreID) {
 						aPlayers->at(i)->score = player1->score;
-						cout << "ID: " << aPlayers->at(i)->ID << " Score: " << aPlayers->at(i)->score;
+						cout << "ID: " << aPlayers->at(i)->ID << " Score: " << aPlayers->at(i)->score << endl;
 					}
 				}
 			}
-			else if (type == 6) {
+			else if (type == WIN) {
 				ack >> mess;
 				cout << mess;
 				player1->win = true;
 			}
-			else if (type == 7) {
+			else if (type == SKILL_1) {
 				ack >> coin1->posX;
 				ack >> coin1->posY;
 			}
-			else if (type == 8) {
+			else if (type == SKILL_2) {
 				ack >> sk1ID;
 				ack >> tempX;
 				ack >> tempY;
@@ -164,7 +191,7 @@ int main()
 	Player* player = new Player;
 	vector<Player*> aPlayers;
 	Coin* coin = new Coin;
-	
+
 	int type = 0;
 	conn << type;
 	conn << "Holi";
@@ -176,15 +203,22 @@ int main()
 	float millisPassed = 0.0f;
 	clock_t msgListStartTime = clock();
 
-	Socket::Status status = socket.send(conn, "localhost", 50000);
-	if (status != Socket::Done) {
-
-	}
-	else {
-
-	}
-
 	thread t1(&receiveData, &socket, &aPlayers, player, coin);
+
+	while (player->start != true) {
+		if (secondsPassed > 0.5f) {
+			Socket::Status status = socket.send(conn, "localhost", 50000);
+			if (status != Socket::Done) {
+
+			}
+			else {
+
+			}
+			cout << "holi";
+			startTime = clock();
+		}
+		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+	}
 
 	sf::Vector2f casillaOrigen, casillaDestino;
 
@@ -210,6 +244,11 @@ int main()
 				if (Keyboard::isKeyPressed(Keyboard::A)) {
 					if (player->posX > 0) {
 						player->posX -= 5;
+
+						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
+						//player->acumX += 5;
+						//Prediccio
+						//player->posX += 10;
 						break;
 					}
 				}
@@ -218,6 +257,11 @@ int main()
 				if (Keyboard::isKeyPressed(Keyboard::D)) {
 					if (player->posX < 587) {
 						player->posX += 5;
+
+						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
+						//player->acumX += 5;
+						//Prediccio
+						//player->posX += 10;
 						break;
 					}
 				}
@@ -226,6 +270,11 @@ int main()
 				if (Keyboard::isKeyPressed(Keyboard::W)) {
 					if (player->posY > 0) {
 						player->posY -= 5;
+
+						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
+						//player->acumY -= 5;
+						//Prediccio
+						//player->posY -= 10;
 						break;
 					}
 				}
@@ -234,9 +283,14 @@ int main()
 				if (Keyboard::isKeyPressed(Keyboard::S)) {
 					if (player->posY < 587) {
 						player->posY += 5;
+
+						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
+						//player->acumY += 5;
+						//Prediccio
+						//player->posY += 10;
 						break;
 					}
-					
+
 				}
 				if (Keyboard::isKeyPressed(Keyboard::E)) {
 					if (player->sk1Used == false) {
@@ -268,7 +322,7 @@ int main()
 
 			}
 		}
-	
+
 		if (millisPassed > 100) {
 			Packet mov;
 			type = 2;
@@ -281,14 +335,37 @@ int main()
 			socket.send(mov, "localhost", 50000);
 			msgListStartTime = clock();
 		}
-		
+
+		//Acumulacio moviment (NO FUNCIONA DEL TODO BIEN)
+		//if (millisPassed > 100) {
+		//	Packet mov;
+		//	type = 2;
+		//	mov << type;
+		//	mov << player->ID;
+		//	//cout << "PosX: " << player->posX << endl;
+		//	//cout << "PosY: " << player->posY << endl;
+		//	Positions position;
+		//	mov << player->acumX;
+		//	mov << player->acumY;
+		//	position.delta_X = player->acumX;
+		//	position.delta_Y = player->acumY;
+		//	player->acumulate.push_back(position);
+		//	for (int i = 0; i < aPlayers.size(); i++) {
+
+		//		socket.send(mov, "localhost", 50000);
+		//	}
+
+
+		//	msgListStartTime = clock();
+		//}
+
 		window.clear();
 
 		//Draw Players
 		CircleShape plCircle(RADIO_AVATAR);
-		
+
 		for (int i = 0; i < aPlayers.size(); ++i) {
-		//	plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
+			//	plCircle.setPosition(BoardToWindows(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY)));
 			plCircle.setPosition(Vector2f(aPlayers[i]->posX, aPlayers[i]->posY));
 			if (aPlayers[i]->ID == player->ID) plCircle.setFillColor(sf::Color(255, 0, 0, 255));
 			else plCircle.setFillColor(sf::Color(0, 0, 255, 255));

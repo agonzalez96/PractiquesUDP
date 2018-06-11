@@ -36,6 +36,7 @@ struct Player {
 	bool win = false;
 	bool sk1Used = false;
 	bool sk2Used = false;
+	bool start = false;
 };
 
 struct Coin {

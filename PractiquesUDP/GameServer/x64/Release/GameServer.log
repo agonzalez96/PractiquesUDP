@@ -1,9 +1,9 @@
 ﻿  mainServerTaller6.cpp
-mainServerTaller6.cpp(12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-mainServerTaller6.cpp(214): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-mainServerTaller6.cpp(318): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
-mainServerTaller6.cpp(319): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainServerTaller6.cpp(21): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+mainServerTaller6.cpp(276): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+mainServerTaller6.cpp(382): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
+mainServerTaller6.cpp(383): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
   Generating code
-  All 338 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 339 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   GameServer.vcxproj -> C:\Users\Alumno\Documents\PractiquesUDP\PractiquesUDP\x64\Release\GameServer.exe
