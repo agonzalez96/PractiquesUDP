@@ -9,6 +9,7 @@
 #define WIN 6
 #define SKILL_1 7
 #define SKILL_2 8
+#define MOVACK 9
 
 using namespace sf;
 using namespace std;
@@ -37,7 +38,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 	int count = 0;
 	int discID, movID, scoreID, sk1ID;
 	int tempX, tempY;
-	int tmpIDPacket;
+	int tmpIDPacket, movIDPacket;
 	int tmpScore;
 	Player* player = new Player;
 
@@ -179,6 +180,19 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 					}
 				}
 			}
+			else if (type == MOVACK) {
+				ack >> movIDPacket;
+				ack >> tempX;
+				ack >> tempY;
+				player1->listAccum.erase(movIDPacket);
+				Packet mov;
+				int sendType = 2;
+				mov << sendType;
+				mov << player1->ID;
+				mov << tempX;
+				mov << tempY;
+				socket->send(mov, "localhost", 50000);
+			}
 		}
 	}
 }
@@ -191,6 +205,7 @@ int main()
 	Player* player = new Player;
 	vector<Player*> aPlayers;
 	Coin* coin = new Coin;
+	int movIDPacket = 0;	
 
 	int type = 0;
 	conn << type;
@@ -243,7 +258,7 @@ int main()
 			case sf::Event::KeyPressed:
 				if (Keyboard::isKeyPressed(Keyboard::A)) {
 					if (player->posX > 0) {
-						player->posX -= 5;
+						player->tmpposX -= 5;
 
 						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
 						//player->acumX += 5;
@@ -256,7 +271,7 @@ int main()
 				//Right
 				if (Keyboard::isKeyPressed(Keyboard::D)) {
 					if (player->posX < 587) {
-						player->posX += 5;
+						player->tmpposX += 5;
 
 						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
 						//player->acumX += 5;
@@ -269,7 +284,7 @@ int main()
 				//Up
 				if (Keyboard::isKeyPressed(Keyboard::W)) {
 					if (player->posY > 0) {
-						player->posY -= 5;
+						player->tmpposY -= 5;
 
 						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
 						//player->acumY -= 5;
@@ -282,7 +297,7 @@ int main()
 				//Down
 				if (Keyboard::isKeyPressed(Keyboard::S)) {
 					if (player->posY < 587) {
-						player->posY += 5;
+						player->tmpposY += 5;
 
 						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
 						//player->acumY += 5;
@@ -325,14 +340,17 @@ int main()
 
 		if (millisPassed > 100) {
 			Packet mov;
-			type = 2;
+			type = 7;
 			mov << type;
+			mov << movIDPacket;
 			mov << player->ID;
-			mov << player->posX;
-			mov << player->posY;
+			mov << player->tmpposX;
+			mov << player->tmpposY;
 			//cout << "PosX: " << player->posX << endl;
 			//cout << "PosY: " << player->posY << endl;
 			socket.send(mov, "localhost", 50000);
+			player->listAccum[movIDPacket] = mov;
+			movIDPacket++;
 			msgListStartTime = clock();
 		}
 

@@ -37,6 +37,8 @@ struct Player {
 	bool sk1Used = false;
 	bool sk2Used = false;
 	bool start = false;
+	map<int, Packet> listAccum;
+	map<int, Packet> movAccum;
 };
 
 struct Coin {

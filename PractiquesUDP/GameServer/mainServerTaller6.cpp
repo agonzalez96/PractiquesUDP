@@ -9,6 +9,7 @@
 #define PING_RESET 4
 #define SKILL1 5
 #define SKILL2 6
+#define MOVACK 7
 
 
 using namespace sf;
@@ -32,6 +33,7 @@ int main()
 	int tmpIDPacket, tmpID;
 	float dist;
 	bool win = false;
+	int movIDPacket;
 
 	Coin* coin = new Coin;
 	coin->posX = rand() % 587;
@@ -188,19 +190,31 @@ int main()
 				}
 				recType = -1;
 			}
-			//Acumulacion (NO FUNCIONA)
-			/*	else if (recType == 2) {
-			conn >> movID;
-			conn >> deltaX;
-			conn >> deltaY;
-			Positions_server temp;
-			temp.ID = movID;
-			temp.delta_X = deltaX;
-			temp.delta_Y = deltaY;
-			server_acum.push_back(temp);
-
-			recType = -1;
-			}*/
+			if (recType == MOVACK) {
+				conn >> movIDPacket;
+				int tmpX, tmpY;
+				conn >> tmpID;
+				conn >> tmpX;
+				conn >> tmpY;
+				Packet movAck;
+				sendType = 9;
+				movAck << sendType;
+				movAck << movIDPacket;
+				
+				if (tmpX > 0 && tmpX < 587 && tmpY > 0 && tmpY < 587) {
+					movAck << tmpX;
+					movAck << tmpY;
+				}
+				else {
+					for (int i = 0; i < aPlayers.size(); i++) {
+						if (aPlayers[i]->ID == tmpID) {
+							movAck << aPlayers[i]->posX;
+							movAck << aPlayers[i]->posY;
+						}
+					}
+				}
+				socket.send(movAck, player->senderIP, player->senderPort);
+			}
 
 			//Critical packet ACK
 			else if (recType == ACK_CRITICAL_PACKET) {
