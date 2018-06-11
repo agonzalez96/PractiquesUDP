@@ -62,6 +62,8 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				ack >> player1->ID;
 				ack >> player1->posX;
 				ack >> player1->posY;
+				ack >> player1->tmpposX;
+				ack >> player1->tmpposY;
 				ack >> coin1->posX;
 				ack >> coin1->posY;
 				cout << "ID: " << player->ID << endl;
