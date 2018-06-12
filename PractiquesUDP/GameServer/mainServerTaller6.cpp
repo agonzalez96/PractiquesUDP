@@ -34,6 +34,7 @@ int main()
 	float dist;
 	bool win = false;
 	int movIDPacket;
+	int accumID = 0;
 
 	Coin* coin = new Coin;
 	coin->posX = rand() % 587;
@@ -41,10 +42,12 @@ int main()
 
 	float secondsPassed = 0.0f;
 	float millisPassed = 0.0f;
+	float millisPassed2 = 0.0f;
 
 	Socket::Status status = socket.bind(50000);
 
 	clock_t startTime = clock();
+	clock_t startTime2 = clock();
 	clock_t msgListStartTime = clock();
 
 
@@ -183,10 +186,9 @@ int main()
 						newInfo << aPlayers[i]->ID;
 						newInfo << aPlayers[i]->posX;
 						newInfo << aPlayers[i]->posY;
+						aPlayers[i]->movAccum[accumID] = newInfo;
+						accumID++;
 					}
-				}
-				for (int i = 0; i < aPlayers.size(); i++) {
-					socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
 				}
 				recType = -1;
 			}
@@ -323,29 +325,33 @@ int main()
 
 
 		//Acumulacio moviment
-		/*if (millisPassed > 100) {
-		Packet newInfo;
-		sendType = 3;
-		newInfo << sendType;
-		for (int i = 0; i < aPlayers.size(); i++) {
-		for (int j = 0; j < server_acum.size(); j++) {
-		if (aPlayers[i]->ID == server_acum[j].ID) {
-		aPlayers[i]->posX += server_acum[j].delta_X;
-		aPlayers[i]->posY += server_acum[j].delta_Y;
-		newInfo << aPlayers[i]->ID;
-		newInfo << aPlayers[i]->posX;
-		newInfo << aPlayers[i]->posY;
-		server_acum.erase(server_acum.begin() + j);
-		}
-		}
-		}
-		for (int i = 0; i < aPlayers.size(); i++) {
+		if (millisPassed2 > 500) {
+			for (int i = 0; i < aPlayers.size(); i++) {
+				if (aPlayers[i]->movAccum.size() != 0) {
+					for (map<int, Packet>::reverse_iterator it = aPlayers[i]->movAccum.rbegin(); it != aPlayers[i]->movAccum.rend(); ++it) {
 
-		socket.send(newInfo, aPlayers[i]->senderIP, aPlayers[i]->senderPort);
-		}
+						int tmpX2, tmpY2, tmpID2, tmpSendType;
+						it->second >> tmpSendType;
+						it->second >> tmpID2;
+						it->second >> tmpX2;
+						it->second >> tmpY2;
+						cout << "Type: " << tmpSendType << endl;
+						cout << "id: " << tmpID2 << endl;
+						cout << "x: " << tmpX2 << endl;
+						cout << "y: " << tmpY2 << endl;
+						if (tmpX2 > 0 && tmpX2 < 587 && tmpY2 > 0 && tmpY2 < 587) {
+							for (int j = 0; j< aPlayers.size(); j++) {
+								socket.send(it->second, aPlayers[j]->senderIP, aPlayers[j]->senderPort);
+							}
+							aPlayers[i]->movAccum.clear();
+						}
+						
+					}
+				}
+			}
+			startTime2 = clock();
 
-		msgListStartTime = clock();
-		}*/
+		}
 
 		//Critical Pakcets 
 		if (millisPassed > 500) {
@@ -395,6 +401,7 @@ int main()
 
 		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
 		millisPassed = (clock() - msgListStartTime);
+		millisPassed2 = (clock() - startTime2);
 		//cout << to_string(millisPassed) << endl;
 	}
 	return 0;
