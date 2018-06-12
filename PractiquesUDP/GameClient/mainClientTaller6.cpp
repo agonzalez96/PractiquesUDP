@@ -107,6 +107,7 @@ void receiveData(UdpSocket* socket, vector<Player*>* aPlayers, Player* player1, 
 				ack >> tempY;
 				for (int i = 0; i < aPlayers->size(); i++) {
 					if (aPlayers->at(i)->ID == movID) {
+						if (aPlayers->at(i)->posX != player1->tmpposX || aPlayers->at(i)->posY != player1->tmpposY)
 						aPlayers->at(i)->posX = tempX;
 						aPlayers->at(i)->posY = tempY;
 					}
@@ -259,52 +260,60 @@ int main()
 
 			case sf::Event::KeyPressed:
 				if (Keyboard::isKeyPressed(Keyboard::A)) {
-					if (player->posX > 0) {
+					if (player->posX > 0 && player->tmpposX > 0) {
 						player->tmpposX -= 5;
 
-						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
-						//player->acumX += 5;
 						//Prediccio
-						//player->posX += 10;
+						for (int i = 0; i < aPlayers.size(); i++) {
+							if (player->ID == aPlayers[i]->ID) {
+								aPlayers[i]->posX = player->tmpposX;
+							}
+						}
 						break;
 					}
 				}
 
 				//Right
 				if (Keyboard::isKeyPressed(Keyboard::D)) {
-					if (player->posX < 587) {
+					if (player->posX < 587 && player->tmpposX < 587) {
 						player->tmpposX += 5;
 
-						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
-						//player->acumX += 5;
 						//Prediccio
-						//player->posX += 10;
+						for (int i = 0; i < aPlayers.size(); i++) {
+							if (player->ID == aPlayers[i]->ID) {
+								aPlayers[i]->posX = player->tmpposX;
+							}
+						}
 						break;
 					}
 				}
 
 				//Up
 				if (Keyboard::isKeyPressed(Keyboard::W)) {
-					if (player->posY > 0) {
+					if (player->posY > 0 && player->tmpposY > 0) {
 						player->tmpposY -= 5;
 
-						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
-						//player->acumY -= 5;
 						//Prediccio
-						//player->posY -= 10;
+						for (int i = 0; i < aPlayers.size(); i++) {
+							if (player->ID == aPlayers[i]->ID) {
+								aPlayers[i]->posY = player->tmpposY;
+							}
+						}
 						break;
 					}
 				}
 
 				//Down
 				if (Keyboard::isKeyPressed(Keyboard::S)) {
-					if (player->posY < 587) {
+					if (player->posY < 587 && player->tmpposY < 587) {
 						player->tmpposY += 5;
 
-						//Acumulacion(NO FUNCIONA DEL TODO BIEN)
-						//player->acumY += 5;
 						//Prediccio
-						//player->posY += 10;
+						for (int i = 0; i < aPlayers.size(); i++) {
+							if (player->ID == aPlayers[i]->ID) {
+								aPlayers[i]->posY = player->tmpposY;
+							}
+						}
 						break;
 					}
 
